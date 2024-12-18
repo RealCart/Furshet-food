@@ -1,0 +1,58 @@
+.header {
+    width: 100%;
+    background-color: #fff;
+    border-bottom: 1px solid #eee;
+}
+
+.header__content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.header__logo img {
+    height: 40px;
+}
+
+.header__nav-list {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.header__nav-link {
+    text-decoration: none;
+    font-weight: 500;
+    color: #333;
+}
+
+.header__nav-link:hover {
+    color: #b30000;
+}
+
+.header__actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header__balance {
+    font-weight: bold;
+    color: #333;
+}
+
+.header__login-button,
+.header__cart-button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.header__cart-icon {
+    font-size: 20px;
+}
