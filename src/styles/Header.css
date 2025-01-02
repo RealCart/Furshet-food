@@ -1,14 +1,10 @@
 .header {
     width: 100%;
     background-color: #fff;
-    border-bottom: 1px solid #eee;
+    margin: 30px auto;
 }
 
 .header__content {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -26,12 +22,14 @@
 
 .header__nav-link {
     text-decoration: none;
-    font-weight: 500;
-    color: #333;
+    font-weight: bold;
+    color: #272727;
+    font-size: 19px;
 }
 
 .header__nav-link:hover {
     color: #b30000;
+    cursor: pointer;
 }
 
 .header__actions {
@@ -41,16 +39,35 @@
 }
 
 .header__balance {
-    font-weight: bold;
-    color: #333;
+    align-items: center;
+    font-size: 19px;
+    display: inline-flex;
+    border:1px solid #8B0506;
+    border-radius: 10px;
+    padding: 6px 12px;
 }
 
-.header__login-button,
-.header__cart-button {
-    border: none;
-    background: none;
+.balance__count {
+    margin-left: 12px;
+    font-weight: bold;
+    color: #8B0506;
+}
+
+.header__login-button {
+    padding: 8px 25px;
+    background-color: #FFF1D7;
+    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
+    color:#272727;
+    font-size: 19px;
+    font-weight: bold;
+}
+
+.header__cart-button {
+    cursor: pointer;
+    padding: 4px 8px;
+    background-color: #FFF1D7;
+    border-radius: 10px;
 }
 
 .header__cart-icon {

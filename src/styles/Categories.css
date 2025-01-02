@@ -1,0 +1,39 @@
+.category-card {
+  border-radius: 10px;
+  padding: 12px;
+  min-width: 120px; 
+  min-height: 105px; 
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+  cursor: pointer;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+}
+
+.category-title {
+  width: 100%;
+  max-width: 100px;
+  font-size: 16px;
+  font-weight: 700;
+  word-wrap: break-word;
+}
+
+.count-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  height: 100%;
+}
+
+.category-count {
+  display: flex;
+}
+
+.category-count span {
+  background-color: #FFF1D7;
+  border-radius: 10px;
+  padding: 0px 10px;
+}
