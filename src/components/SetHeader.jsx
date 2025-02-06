@@ -7,17 +7,17 @@ const SetHeader = (props) => {
 
     useEffect(() => {
         axios.get(props.url).then((response) => {
-            console.log(response.data)
+            console.log("SetHeader: ", response.data)
             setMenuHeader(response.data);
         })
     }, []);
 
     return (
         <>
-            {menuHeader.map((item, index) => (
-                <div className="menuHeader">
+            {menuHeader.map((item) => (
+                <div className="menuHeader" key={item.id}>
                     <div className="menu_title">
-                        {item}
+                        {item.name}
                     </div>
                 </div>
             ))}

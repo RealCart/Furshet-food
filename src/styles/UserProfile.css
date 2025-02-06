@@ -1,0 +1,9 @@
+.userProfile {
+    padding: 8px 25px;
+    background-color: #FFF1D7;
+    border-radius: 10px;
+    cursor: pointer;
+    color:#272727;
+    font-size: 19px;
+    font-weight: bold;
+}

@@ -1,0 +1,29 @@
+.code-container {
+    position: relative;
+    display: flex;
+    margin: 40px 0px;
+    height: 100%;
+    min-height: 45px;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+}
+
+.code-box-unselected {
+    width: 24px;
+    height: 24px;
+    font-weight: bold;
+    background-color: #D9D9D9;
+    border-radius: 100%;
+    cursor: text;
+}
+
+.code-box-unselected:focus, .code-box-selected:focus {
+    outline: none;
+}
+
+.code-box-selected {
+    text-align: center;
+    font-weight: bold;
+    font-size: 30px;
+} 

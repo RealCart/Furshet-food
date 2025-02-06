@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import Slider from '/image/banner_picture.svg';
+import React, { useState, useRef, useEffect } from "react";
+import Slider from '/images/banner_picture.svg';
 import BunnerBtn from '/Icons/banner_btn.svg';
 import "../styles/Banner.css";
 
@@ -11,23 +11,59 @@ const Banner = () => {
   ]
 
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [slide, setSlide] = useState(true);
+  const setIntervalRef = useRef(null);
+  const [startX, setStartX] = useState(0);
+  const [endX, setEndX] = useState(0); 
 
   const nextSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === slides.length - 1 ? 0 : prevIndex + 1
+    setCurrentIndex((currIndex) =>
+      currIndex === slides.length - 1 ? 0 : currIndex + 1
     );
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prevIndex) =>
-      prevIndex === 0 ? slides.length - 1 : prevIndex - 1
+    setCurrentIndex((currIndex) =>
+      currIndex === 0 ? slides.length - 1 : currIndex - 1
     );
   };
 
+  const handleTouchStart = (e) => {
+    setStartX(e.touches[0].clientX);
+    toggleStateSlide();
+  };
+
+  const handleTouchMove = (e) => {
+    setEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (startX - endX > 50) {
+      nextSlide();
+    } else if (endX - startX > 50) {
+      prevSlide();
+    }
+    toggleStateSlide();
+  };
+
+  useEffect(() => {
+    if (slide) {
+      setIntervalRef.current = setInterval(nextSlide, 4500);
+    } else {
+      clearInterval(setIntervalRef.current);
+    }
+    return () => clearInterval(setIntervalRef.current); 
+  }, [slide])
+
+  const toggleStateSlide = () => {
+    setSlide((currStateSlide) => !currStateSlide);
+  };
+
+
   return (
     <div className="slider">
-      <div className="slider_wrapper">
-        <div className="slider-btn prev" onClick={prevSlide}>
+      <div className="slider_wrapper" onTouchStart={handleTouchStart} onTouchMove={handleTouchMove} onTouchEnd={handleTouchEnd}>
+        <div className="slider-btn prev" onClick={prevSlide} onMouseEnter={toggleStateSlide} onMouseLeave={toggleStateSlide}>
           <img src={BunnerBtn} alt="Назад" />
         </div>
         <div className="slides_wrapper">
@@ -44,7 +80,7 @@ const Banner = () => {
             ))}
           </div>
         </div>
-        <div className="slider-btn next" onClick={nextSlide}>
+        <div className="slider-btn next" onClick={nextSlide}  onMouseEnter={toggleStateSlide} onMouseLeave={toggleStateSlide}>
           <img src={BunnerBtn} alt="Вперед" />
         </div>
       </div>

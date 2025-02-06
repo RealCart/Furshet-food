@@ -73,3 +73,16 @@
 .header__cart-icon {
     font-size: 20px;
 }
+
+@media (max-width: 768px) {
+    .header__nav,
+    .header__cart-button,
+    .header__login-button {
+        display: none;
+    }
+
+    .header__content {
+        display: flex;
+        justify-content: space-between;
+    }
+}

@@ -1,2 +1,6 @@
-export const API_KEY = "6771d76dee76b92dd490980b";
-export const baseUrl = `https://${API_KEY}.mockapi.io/`;
+export const API_KEY = "25de-178-89-169-44.ngrok-free.app";
+export const baseUrl = `https://${API_KEY}/api`;
+export const headers = {
+    'ngrok-skip-browser-warning': 'true',
+    'Accept': 'application/json',
+};

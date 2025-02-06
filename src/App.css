@@ -1,16 +1,20 @@
-.wrapper {
-    display: flex;
+.common_wrapper {
+    max-width: 100%;
+    transition: max-width 0.5s ease;
 }
 
 .category_line_wrapper {
     display: inline-flex;
+    overflow-x: scroll;
+    scrollbar-width: none;
+    width: 100%;
 }
 
 .category_line {
     display: flex;
-    flex-wrap: wrap; 
     gap: 19px;
-    justify-content: space-between;
+    flex-wrap: nowrap;
+    width: 100%;
     align-items: stretch; 
   }
   

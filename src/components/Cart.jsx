@@ -1,30 +1,46 @@
-import React, { useState } from "react";
-import option_arrow from '/Icons/option_arrow.svg'
-import FSign from '/Icons/FSign.svg';
+import React, { useEffect, useState } from "react";
+import CartAddedItem from "./cartAddedItem";
 import "../styles/Cart.css";
 
-const Cart = (props) => {
-  const [countValue, setCountValue] = useState(1);
+import { useDispatch, useSelector } from "react-redux";
+import { closeCart, deviceQuantity, removeAllFromCart, selectTotalAmount } from "../features/cartSlice";
 
-  const handleIncrement = () => {
-    setCountValue(countValue + 1)
-  };
+import axios from "../axios";
+import { cart } from "../constants/URLs";
 
-  const handleDecrement = () => {
-    setCountValue(countValue - 1)
-  };
+import option_arrow from '/Icons/option_arrow.svg'
+import FSign from '/Icons/FSign.svg';
+import Deivces from '/Icons/devices.svg'
 
+const Cart = () => {
+  const dispatch = useDispatch();
+  
+  const isAuthorized = useSelector((state) => state.auth.isAuthorized);
+  const isCartOpen = useSelector((state) => state.cart.isCartOpen);
+  const deviceCount = useSelector((state) => state.cart.devices);
+  const localStorageCart = useSelector((state) => state.cart.items);
+  const totalAmount = useSelector(selectTotalAmount);
+
+  const [cartItems, setCartItems] = useState();
+
+  useEffect(() => {
+    if (isAuthorized) {
+      // Логика вытаскивания из бд
+    } else {  
+      setCartItems([...localStorageCart])
+    }
+  }, [isAuthorized, localStorageCart])
 
   return (
-    <div className="cart_wrapper" style={props.stateOpenCart ? {transform: "translateX(0)", transition: 'transform 0.5s ease'} : {}}>
+    <div className="cart_wrapper" style={{transform: isCartOpen ? "translateX(0)" : "", transition: "transform 0.5s ease"}}>
       <div className="cart_top">
         <div className="cart_title">Корзина</div>
         <div className="cart_top_right">
-          <div className="cart_clear_textBtn">Очистить</div>
-          <div className="cart_close" onClick={props.setOpenCart}>
+          <div className="cart_clear_textBtn" onClick={() => {dispatch(removeAllFromCart()); localStorage.removeItem("cart");}}>Очистить</div>
+          <div className="cart_close" onClick={() => dispatch(closeCart())}>
             <svg width="37" height="36" viewBox="0 0 37 36" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="18.2002" cy="18" r="18" fill="#FAFAFA"/>
-              <path d="M12.8003 12.6L23.6003 23.4M12.8003 23.4L23.6003 12.6" stroke="#272727" stroke-width="0.9" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M12.8003 12.6L23.6003 23.4M12.8003 23.4L23.6003 12.6" stroke="#272727" strokeWidth="0.9" strokeLinecap="round" strokeLinejoin="round"/>
             </svg>
           </div>
         </div>
@@ -32,31 +48,13 @@ const Cart = (props) => {
       <div className="cart_main">
         <div className="cart_body">
           <div className="cart_added_list">
-            <div className="cart_added_item">
-              <img src="/image/plov.png" alt="plov" />
-              <div className="cart_item_info">
-                <div className="cart_item_top">
-                  <div className="cart_item_title">Праздничный плов</div>
-                  <div className="cart_item_count">
-                    <div className="item_count_minus" onClick={handleDecrement}>
-                      <svg width="14" height="3" viewBox="0 0 14 3" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12.2005 2.70002H1.40049C1.16179 2.70002 0.932875 2.6052 0.764092 2.43642C0.59531 2.26764 0.500488 2.03872 0.500488 1.80002C0.500488 1.56133 0.59531 1.33241 0.764092 1.16363C0.932875 0.994846 1.16179 0.900024 1.40049 0.900024H12.2005C12.4392 0.900024 12.6681 0.994846 12.8369 1.16363C13.0057 1.33241 13.1005 1.56133 13.1005 1.80002C13.1005 2.03872 13.0057 2.26764 12.8369 2.43642C12.6681 2.6052 12.4392 2.70002 12.2005 2.70002Z" fill="#8B0506"/>
-                      </svg>
-                    </div>
-                    <span>{countValue}</span>
-                    <div className="item_count_plus" onClick={handleIncrement}>
-                      <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.71363 11.3369C6.71363 11.5393 6.63324 11.7334 6.49014 11.8765C6.34704 12.0196 6.15296 12.1 5.95059 12.1C5.74821 12.1 5.55413 12.0196 5.41103 11.8765C5.26793 11.7334 5.18754 11.5393 5.18754 11.3369V7.01302H0.863629C0.661258 7.01302 0.467175 6.93263 0.324076 6.78953C0.180978 6.64643 0.100586 6.45235 0.100586 6.24998C0.100586 6.0476 0.180978 5.85352 0.324076 5.71042C0.467175 5.56732 0.661258 5.48693 0.863629 5.48693H5.18754V1.16302C5.18754 0.960648 5.26793 0.766563 5.41103 0.623465C5.55413 0.480367 5.74821 0.399976 5.95059 0.399976C6.15296 0.399976 6.34704 0.480367 6.49014 0.623465C6.63324 0.766563 6.71363 0.960648 6.71363 1.16302V5.48693H11.0375C11.2399 5.48693 11.434 5.56732 11.5771 5.71042C11.7202 5.85352 11.8006 6.0476 11.8006 6.24998C11.8006 6.45235 11.7202 6.64643 11.5771 6.78953C11.434 6.93263 11.2399 7.01302 11.0375 7.01302H6.71363V11.3369Z" fill="#8B0506"/>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
-                <div className="cart_item_desc">
-                  <div className="cart_item_weight">1000 г</div>
-                  <div className="cart_item_price">9 000 ₸</div>
-                </div>
-              </div>
-            </div>
+            {cartItems && cartItems.length ? (
+              cartItems.map((item) => (
+                <CartAddedItem key={item.id} item={item} />
+              ))
+            ) : (
+              <div className="empty_cart">Тут пока пусто</div>
+            )}
           </div>
         </div>
         <div className="cart_more">
@@ -65,7 +63,7 @@ const Cart = (props) => {
             <div className="line_list">
               <div className="line_item">
                 <div className="item_img">
-                  <img src="/image/more_imgae.png" alt="" />
+                  <img src="/images/more_imgae.png" alt="" />
                 </div>
                 <div className="item_ttl">Манты</div>
                 <div className="item_desc">1000 г.</div>
@@ -73,7 +71,7 @@ const Cart = (props) => {
               </div>
               <div className="line_item">
                 <div className="item_img">
-                  <img src="/image/more_imgae.png" alt="" />
+                  <img src="/images/more_imgae.png" alt="" />
                 </div>
                 <div className="item_ttl">Манты</div>
                 <div className="item_desc">1000 г.</div>
@@ -81,7 +79,7 @@ const Cart = (props) => {
               </div>
               <div className="line_item">
                 <div className="item_img">
-                  <img src="/image/more_imgae.png" alt="" />
+                  <img src="/images/more_imgae.png" alt="" />
                 </div>
                 <div className="item_ttl">Манты</div>
                 <div className="item_desc">1000 г.</div>
@@ -90,19 +88,17 @@ const Cart = (props) => {
             </div>
           </div>
           <div className="count_of_devices">
-            <svg width="15" height="20" viewBox="0 0 15 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M14.6002 1.84502C14.6002 1.2544 14.0242 0.900024 13.4482 0.900024H13.1602C10.7122 0.900024 8.84019 3.1444 8.84019 6.4519V7.51502C8.84019 8.69627 9.56019 9.7594 10.8562 10.35C10.4242 11.7675 10.2802 13.3031 10.2802 13.3031V18.0281C10.2802 18.9731 11.2882 19.8 12.4402 19.8C13.5922 19.8 14.6002 18.9731 14.6002 18.0281V13.3031C14.6002 12.8306 14.4562 11.6494 14.1682 10.5863C14.4562 10.35 14.6002 10.1138 14.6002 9.7594V1.84502ZM6.24819 0.900024H5.9602V5.0344C5.9602 5.38877 5.67219 5.62502 5.2402 5.62502C4.8082 5.62502 4.5202 5.38877 4.5202 5.0344V1.49065C4.5202 1.13627 4.2322 0.900024 3.8002 0.900024C3.3682 0.900024 3.0802 1.13627 3.0802 1.49065V5.0344C3.0802 5.38877 2.7922 5.62502 2.3602 5.62502C1.9282 5.62502 1.6402 5.38877 1.6402 5.0344V0.900024H1.3522C0.776195 0.900024 0.200195 1.37252 0.200195 1.84502V6.21565C0.200195 7.3969 1.0642 8.46002 2.3602 8.93252C1.7842 10.8225 1.6402 13.3031 1.6402 13.3031V18.0281C1.6402 18.9731 2.6482 19.8 3.8002 19.8C4.9522 19.8 5.9602 18.9731 5.9602 18.0281V13.3031C5.9602 12.7125 5.8162 10.5863 5.38419 8.93252C6.53619 8.46002 7.4002 7.3969 7.4002 6.21565V1.84502C7.4002 1.37252 6.82419 0.900024 6.24819 0.900024Z" fill="#8B0506"/>
-            </svg>
             <div className="more_devices_desc">
+              <img src={Deivces} alt="Приборы" />
               <div className="more_ttl">Приборы</div>
               <div className="devices_count">
-                <div className="item_count_minus">
+                <div className="item_count_minus" onClick={() => dispatch(deviceQuantity({quantity: deviceCount - 1}))}>
                   <svg width="14" height="3" viewBox="0 0 14 3" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12.2005 2.70002H1.40049C1.16179 2.70002 0.932875 2.6052 0.764092 2.43642C0.59531 2.26764 0.500488 2.03872 0.500488 1.80002C0.500488 1.56133 0.59531 1.33241 0.764092 1.16363C0.932875 0.994846 1.16179 0.900024 1.40049 0.900024H12.2005C12.4392 0.900024 12.6681 0.994846 12.8369 1.16363C13.0057 1.33241 13.1005 1.56133 13.1005 1.80002C13.1005 2.03872 13.0057 2.26764 12.8369 2.43642C12.6681 2.6052 12.4392 2.70002 12.2005 2.70002Z" fill="#8B0506"/>
                   </svg>
                 </div>
-                <span>1</span>
-                <div className="item_count_plus">
+                <span>{deviceCount}</span>
+                <div className="item_count_plus" onClick={() => dispatch(deviceQuantity({quantity: deviceCount + 1}))}>
                   <svg width="12" height="13" viewBox="0 0 12 13" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M6.71363 11.3369C6.71363 11.5393 6.63324 11.7334 6.49014 11.8765C6.34704 12.0196 6.15296 12.1 5.95059 12.1C5.74821 12.1 5.55413 12.0196 5.41103 11.8765C5.26793 11.7334 5.18754 11.5393 5.18754 11.3369V7.01302H0.863629C0.661258 7.01302 0.467175 6.93263 0.324076 6.78953C0.180978 6.64643 0.100586 6.45235 0.100586 6.24998C0.100586 6.0476 0.180978 5.85352 0.324076 5.71042C0.467175 5.56732 0.661258 5.48693 0.863629 5.48693H5.18754V1.16302C5.18754 0.960648 5.26793 0.766563 5.41103 0.623465C5.55413 0.480367 5.74821 0.399976 5.95059 0.399976C6.15296 0.399976 6.34704 0.480367 6.49014 0.623465C6.63324 0.766563 6.71363 0.960648 6.71363 1.16302V5.48693H11.0375C11.2399 5.48693 11.434 5.56732 11.5771 5.71042C11.7202 5.85352 11.8006 6.0476 11.8006 6.24998C11.8006 6.45235 11.7202 6.64643 11.5771 6.78953C11.434 6.93263 11.2399 7.01302 11.0375 7.01302H6.71363V11.3369Z" fill="#8B0506"/>
                   </svg>
@@ -195,11 +191,11 @@ const Cart = (props) => {
                   </div>
                 </div>
                 <div className="option_ttl">
-                  -5 300 ₸
+                  {totalAmount} ₸
                 </div>
               </div>
             </div>
-            <div className="order_wrapper">
+            {isAuthorized && <div className="order_wrapper">
               <div className="order_options">
                 <div className="option_left">
                   <div className="option_img">
@@ -210,19 +206,21 @@ const Cart = (props) => {
                   </div>
                 </div>
                 <div className="option_ttl_honus">
-                  -2 300 ₸
+                  0 ₸
                 </div>
               </div>
-            </div>
+            </div>}
           </div>
         </div>
       </div>
       <div className="cart_bottom">
-        <div className="cart_total_amount">
+        {totalAmount !== 0 && <div className="cart_total_amount">
           <h3>Общая сумма</h3>
-          <div className="total_amount"><h2>32.000 тг</h2></div>
-        </div>
-
+          <div className="total_amount"><h2>{isAuthorized ? 3000 : totalAmount} тг</h2></div>
+        </div>}
+        <button className="order_cart_btn">
+          Оплатить и заказать
+        </button>
       </div>
     </div>
   );

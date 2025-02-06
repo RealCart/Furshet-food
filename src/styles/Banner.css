@@ -25,7 +25,9 @@
 
 .slide img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    min-height: 180px;
+    object-fit: cover;
     display: block;
 }
 
@@ -58,4 +60,10 @@
     
     .dot.active {
     background: #D3D3D3;
+}
+
+@media(max-width:1024px) {
+    .slider-btn {
+        display: none;
+    }
 }

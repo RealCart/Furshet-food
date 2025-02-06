@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import Header from "./components/Header";
 import Banner from "./components/Banner";
 import About from "./components/About";
@@ -7,42 +7,32 @@ import SetHeader from "./components/SetHeader";
 import CategoryList from "./components/CategoryList";
 import Footer from './components/Footer';
 import Cart from './components/Cart';
-import { menuItem, setHeaderData } from "./Constants/URLS";
+import SignIn from './components/SignInModal';
+import { menuItem } from "./constants/URLs";
 import "./App.css";
 
-const categoryCardData = [
-  {
-    label: "Сеты на компанию",
-    count: 12,
-    bgColor: "#C3DDF8",
-  },
-  {
-    label: "Чайные сеты",
-    count: 15,
-    bgColor: "#F6B9BA",
-  },
-  {
-    label: "Акции",
-    count: 14,
-    bgColor: "#FEDBA6",
-  },
-  {
-    label: "Хит продаж",
-    count: 11,
-    bgColor: "#B8FAC2",
-  },
-];
-
-
+import { useSelector, useDispatch } from "react-redux";
+import { validateSessionFunc } from "./features/authSlice";
 
 function App() {
-  const [CartState, setCartState] = useState(false);
+  const isCartOpen = useSelector((state) => state.cart.isCartOpen)
+  const isSingInOpen = useSelector((state) => state.singIn.isSingInOpen)
+  const isProfileOpen = useSelector((state) => state.profile.isOpen);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(validateSessionFunc())
+      .unwrap().then(() => {
+        dispatch(getUserFunc());
+      })
+  }, [dispatch])
 
   return (
     <div className="wrapper">
-      <Cart stateOpenCart={CartState} setOpenCart={() => setCartState(false)}/>
-      <div className="common_wrapper">
-        <Header openCart={() => {setCartState(true)}}/>
+      <Cart/>
+      <div className="common_wrapper" style={{maxWidth: isCartOpen ? "1265px" : ""}}>
+        <Header/>
         <div className="common">
           <Banner />
           <About />
@@ -50,26 +40,18 @@ function App() {
             <h2>Категории</h2>
             <div className="category_line_wrapper">
               <div className="category_line">
-                  {categoryCardData.map(({label, count, bgColor }, index) => (
-                      <Categories
-                        key={index}
-                        title={label}
-                        count={count}
-                        color={bgColor}
-                      />
-                  ))}
+                <Categories/>
               </div>
             </div>
             <div className="catalog">
               <div className="set_header_line">
                 <SetHeader 
-                  url={setHeaderData} 
+                  url={menuItem} 
                 />
               </div>
               <div className="category_list">
                   <CategoryList
                     url={menuItem}
-                    addToCart={() => console.log('Добавили в корзину')}
                   />
               </div>
             </div>
@@ -77,6 +59,7 @@ function App() {
         </div>
         <Footer/>
       </div>
+      {isSingInOpen && <SignIn/>}
     </div>
   );
 }
