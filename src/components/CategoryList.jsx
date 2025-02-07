@@ -5,36 +5,48 @@ import '../styles/CategoryList.css';
 import axios from "../axios";
 import { cart } from "../constants/URLs";
 
-import { addToCart } from '../features/cartSlice';
+import { addToCart, getUserCart } from '../features/cartSlice';
+import { openFood } from "../features/foodInfo";
+import LoadingModal from "./LoadingModal";
 
 const CategoryList = (props) => {
+    const [loading, setLoading] = useState(false);
+
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
 
-    const [menuItem, setMenuItem] = useState([]);
+    const [menuCategoryItem, setMenuCategoryItem] = useState([]);
     useEffect(() => {
         axios.get(props.url).then((response) => {
             console.log('CategoryList: ', response.data)
-            setMenuItem(response.data)
+            setMenuCategoryItem(response.data)
         }).catch((error) => console.log("ERROR catched category list: ", error));
     }, []);
 
     const handleAddToCart = async (dataId, dataPrice) => {
-        const addItem = {
-            item_id: dataId,
-            quantity: 1,
-            price: dataPrice,
-        };
-    
         if (isAuthenticated) {
+            setLoading(true);
+            const addItem = {
+                item_type: "food",
+                item_id: dataId,
+                quantity: 1,
+            }
             try {
                 const response = await axios.post(cart, addItem, { withCredentials: true });
                 console.log("Success: ", response);
+                dispatch(getUserCart());
             } catch (error) {
                 console.error("Error adding item to cart: ", error);
                 alert("Something went wrong while adding the item to the cart. Please try again.");
+            } finally {
+                setLoading(false);
             }
         } else {
+            const addItem = {
+                item_id: dataId,
+                quantity: 1,
+                price: dataPrice,
+            };
             const existingCart = JSON.parse(window.localStorage.getItem('cart')) || [];
             const updateCart = [...existingCart];
             const existingItem = updateCart.findIndex(item => item.item_id === addItem.item_id);
@@ -50,13 +62,14 @@ const CategoryList = (props) => {
 
     return (
         <>
-            {menuItem.map((item) => (
+            {loading && <LoadingModal/>}
+            {menuCategoryItem.map((item) => (
                 <div className="category_wrapper" key={item.id}>
                     <h2>{item.name}</h2>
                     <section className="product_category_block">
                         {item.food_items.map((item) => (
                             <div className="product_item" key={item.id}>
-                                <img src={item.image_path} alt={item.name} />
+                                <img src={item.image_path} alt={item.name} onClick={() => dispatch(openFood({foodId: item.id}))}/>
                                 <div className="product__item_desc_wrapper">
                                     <div className="product_item_info">
                                         <div className="product_item_title">{item.name}</div>

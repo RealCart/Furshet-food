@@ -1,0 +1,46 @@
+.profile_modal {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    z-index: 10;
+    top: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .32);
+    transition: background .3s;
+}
+
+.profile_modal_wrapper {
+    position: absolute;
+    border-radius: 20px;
+    top: 85px;
+    right: 322px;
+    background-color: #fff;
+    padding: 36px 30px 40px 30px;
+    width: 100vw;
+    height: 100vh;
+    max-width: 400px;
+    max-height: 266px;
+}
+
+.ttl_profile_modal {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 31px;
+}
+
+.profile_modal_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close_profile_modal {
+    cursor: pointer;
+}
+
+.profile_modal_wrapper span {
+    margin: 25px 0px;
+    height: 1px;
+    display: flex;
+    background-color: #8B0506;
+}

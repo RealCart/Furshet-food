@@ -34,6 +34,7 @@
 }
 
 .product_item {
+    cursor: pointer;
     background-color: #FFFCF7;
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);

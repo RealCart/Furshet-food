@@ -1,11 +1,13 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import '../styles/CodeModal.css';
 import SuccessfullyLoggedIn from '/Icons/successfullyLoggedIn.svg'
 
 import axios from "../axios";
 import { verifyOtp } from '../constants/URLs';
+import { validateSessionFunc, getUserFunc } from "../features/authSlice";
 
 import { useDispatch, useSelector } from 'react-redux';
+
 
 const CodeModal = () => {
     const [code, setCode] = useState(['', '', '', '', '', '']); 
@@ -15,7 +17,7 @@ const CodeModal = () => {
     
     const [success, setSuccess] = useState(false);
 
-    const userPhone = useSelector((state) => state.auth.userInfo.phone)
+    const userPhone = useSelector((state) => state.auth.userInfo.userphone)
     
     const handleKeyDown = (e, index) => {
         const key = e.key;
@@ -64,7 +66,15 @@ const CodeModal = () => {
     const handleClick = () => {
         divRefs.current[code.findIndex((el) => el === '')]?.focus();
     };
-    
+
+    useEffect(() => {
+        if (success) {
+            dispatch(validateSessionFunc())
+            .unwrap().then(() => {
+                dispatch(getUserFunc());
+            })
+        }
+      }, [success])
 
     return (
         <>

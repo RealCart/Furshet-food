@@ -11,32 +11,44 @@ import { cart } from "../constants/URLs";
 import option_arrow from '/Icons/option_arrow.svg'
 import FSign from '/Icons/FSign.svg';
 import Deivces from '/Icons/devices.svg'
+import LoadingModal from "./LoadingModal";
 
 const Cart = () => {
   const dispatch = useDispatch();
   
-  const isAuthorized = useSelector((state) => state.auth.isAuthorized);
+  const {isAuthenticated, userInfo} = useSelector((state) => state.auth);
   const isCartOpen = useSelector((state) => state.cart.isCartOpen);
   const deviceCount = useSelector((state) => state.cart.devices);
-  const localStorageCart = useSelector((state) => state.cart.items);
+  const {items, isCartLoading} = useSelector((state) => state.cart);
   const totalAmount = useSelector(selectTotalAmount);
 
   const [cartItems, setCartItems] = useState();
 
   useEffect(() => {
-    if (isAuthorized) {
-      // Логика вытаскивания из бд
-    } else {  
-      setCartItems([...localStorageCart])
+    setCartItems([...items])
+  }, [isAuthenticated, items])
+
+  const removeAllItemFromCart = async () => {
+    dispatch(removeAllFromCart());
+    if (isAuthenticated) {
+      try {
+        const response = await axios.delete(cart);
+        console.log("Sucessuly deleted cart: ", response);
+      } catch (error) {
+        console.log("EROR WHILE DELETING CART: ", error);
+      }
+    } else {
+      localStorage.removeItem("cart");
+      console.log("I removed from localStorage caue your not authorized")
     }
-  }, [isAuthorized, localStorageCart])
+  }
 
   return (
     <div className="cart_wrapper" style={{transform: isCartOpen ? "translateX(0)" : "", transition: "transform 0.5s ease"}}>
       <div className="cart_top">
         <div className="cart_title">Корзина</div>
         <div className="cart_top_right">
-          <div className="cart_clear_textBtn" onClick={() => {dispatch(removeAllFromCart()); localStorage.removeItem("cart");}}>Очистить</div>
+          <div className="cart_clear_textBtn" onClick={() => removeAllItemFromCart()}>Очистить</div>
           <div className="cart_close" onClick={() => dispatch(closeCart())}>
             <svg width="37" height="36" viewBox="0 0 37 36" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="18.2002" cy="18" r="18" fill="#FAFAFA"/>
@@ -195,7 +207,7 @@ const Cart = () => {
                 </div>
               </div>
             </div>
-            {isAuthorized && <div className="order_wrapper">
+            {isAuthenticated && <div className="order_wrapper">
               <div className="order_options">
                 <div className="option_left">
                   <div className="option_img">
@@ -206,7 +218,7 @@ const Cart = () => {
                   </div>
                 </div>
                 <div className="option_ttl_honus">
-                  0 ₸
+                  {userInfo.userBonus_points} ₸
                 </div>
               </div>
             </div>}
@@ -216,7 +228,7 @@ const Cart = () => {
       <div className="cart_bottom">
         {totalAmount !== 0 && <div className="cart_total_amount">
           <h3>Общая сумма</h3>
-          <div className="total_amount"><h2>{isAuthorized ? 3000 : totalAmount} тг</h2></div>
+          <div className="total_amount"><h2>{isAuthenticated ? totalAmount - userInfo.userBonus_points : totalAmount} тг</h2></div>
         </div>}
         <button className="order_cart_btn">
           Оплатить и заказать

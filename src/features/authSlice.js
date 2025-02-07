@@ -58,13 +58,16 @@ const initialState = {
     phoneModal: true,
     verifyCodeModal: false,
     userInfo: {
-        phone: "",
-        name: null,
-        date: null,
-        email: null,
+        userId: null,
+        userName:null,
+        userphone: null,
+        userEmail: null,
+        userInstagram: null,
+        userBirthday: null,
+        userBonus_points: null,
     },
     isLoading: false,
-    isAuthenticated: true,
+    isAuthenticated: false,
     error: null,
 };
 
@@ -90,7 +93,7 @@ const authSlice = createSlice({
                 state.isLoading = false;
                 state.phoneModal = false;
                 state.verifyCodeModal = true;
-                state.userInfo = {...state.userInfo, phone: action.payload}
+                state.userInfo = {...state.userInfo, userphone: action.payload}
             })
             .addCase(sendPhoneNumber.rejected, (state, action) => {
                 state.isLoading = false;
@@ -119,8 +122,9 @@ const authSlice = createSlice({
                 state.error = action.payload
             })
             .addCase(getUserFunc.fulfilled, (state, action) => {
+                const {id, name, phone, email, instagram, birthday, bonus_points} = action.payload
                 state.isLoading = false;
-                state.userInfo = action.payload;
+                state.userInfo = {...state.userInfo, userId: id, userName: name, userphone: phone, userEmail: email, userInstagram: instagram, userBirthday: birthday, userBonus_points: bonus_points};
             })
             .addCase(getUserFunc.rejected, (state, action) => {
                 state.userInfo = null;

@@ -12,12 +12,14 @@ import { menuItem } from "./constants/URLs";
 import "./App.css";
 
 import { useSelector, useDispatch } from "react-redux";
-import { validateSessionFunc } from "./features/authSlice";
+import { validateSessionFunc, getUserFunc } from "./features/authSlice";
+import { getUserCart } from './features/cartSlice';
+import FoodInfoModal from "./components/FoodInfoModal";
 
 function App() {
   const isCartOpen = useSelector((state) => state.cart.isCartOpen)
   const isSingInOpen = useSelector((state) => state.singIn.isSingInOpen)
-  const isProfileOpen = useSelector((state) => state.profile.isOpen);
+  const {isFoodInfoOpen} = useSelector((state) => state.foodInfo);
 
   const dispatch = useDispatch();
 
@@ -25,6 +27,7 @@ function App() {
     dispatch(validateSessionFunc())
       .unwrap().then(() => {
         dispatch(getUserFunc());
+        dispatch(getUserCart());
       })
   }, [dispatch])
 
@@ -60,6 +63,7 @@ function App() {
         <Footer/>
       </div>
       {isSingInOpen && <SignIn/>}
+      {isFoodInfoOpen && <FoodInfoModal/>}
     </div>
   );
 }

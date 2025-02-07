@@ -11,10 +11,10 @@ import Cart from '/Icons/Cart.svg';
 import UserProfile from './userProfile';
 import MenuMobile from './MenuMobile';
 
-function Header(props) {
+function Header() {
   const dispatch = useDispatch();
 
-  const isAuthorized = useSelector((state) => state.auth.isAuthorized);
+  const { isAuthenticated, userInfo } = useSelector((state) => state.auth);
 
   return (
     <header className="header">
@@ -33,11 +33,11 @@ function Header(props) {
           </ul>
         </nav>
         <div className="header__actions">
-          {isAuthorized && (
+          {isAuthenticated && (
             <div className="header__balance">
               <img src={FSign} alt="" />
               <div className="balance__count">
-                  1000 ₸
+                  {userInfo.userBonus_points} ₸
               </div>
             </div>
           )}
