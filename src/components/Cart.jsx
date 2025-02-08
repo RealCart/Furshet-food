@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react";
-import CartAddedItem from "./cartAddedItem";
+import CartAddedItem from "./CartAddedItem";
 import "../styles/Cart.css";
 
 import { useDispatch, useSelector } from "react-redux";
 import { closeCart, deviceQuantity, removeAllFromCart, selectTotalAmount } from "../features/cartSlice";
 
 import axios from "../axios";
-import { cart } from "../constants/URLs";
+import { cart, cartGuest } from "../constants/URLs";
 
 import option_arrow from '/Icons/option_arrow.svg'
 import FSign from '/Icons/FSign.svg';
 import Deivces from '/Icons/devices.svg'
-import LoadingModal from "./LoadingModal";
+import { ClipLoader } from 'react-spinners';
 
 const Cart = () => {
   const dispatch = useDispatch();
@@ -19,33 +19,43 @@ const Cart = () => {
   const {isAuthenticated, userInfo} = useSelector((state) => state.auth);
   const isCartOpen = useSelector((state) => state.cart.isCartOpen);
   const deviceCount = useSelector((state) => state.cart.devices);
-  const {items, isCartLoading} = useSelector((state) => state.cart);
+  const {items} = useSelector((state) => state.cart);
   const totalAmount = useSelector(selectTotalAmount);
 
-  const [cartItems, setCartItems] = useState();
+  const [cartItems, setCartItems] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setCartItems([...items])
   }, [isAuthenticated, items])
 
   const removeAllItemFromCart = async () => {
-    dispatch(removeAllFromCart());
+    setLoading(true);
     if (isAuthenticated) {
       try {
         const response = await axios.delete(cart);
-        console.log("Sucessuly deleted cart: ", response);
+        dispatch(removeAllFromCart());
+        console.log("Sucessuly deleted user cart: ", response);
       } catch (error) {
-        console.log("EROR WHILE DELETING CART: ", error);
+        console.log("EROR WHILE DELETING USER CART: ", error);
       }
     } else {
-      localStorage.removeItem("cart");
-      console.log("I removed from localStorage caue your not authorized")
+      try {
+        const response = await axios.delete(cartGuest);
+        dispatch(removeAllFromCart());
+        console.log("Sucessuly deleted from guest cart: ", response);
+      } catch (error) {
+        console.log("EROR WHILE DELETING GUEST CART: ", error);
+      }
     }
+    setLoading(false);
   }
 
   return (
-    <div className="cart_wrapper" style={{transform: isCartOpen ? "translateX(0)" : "", transition: "transform 0.5s ease"}}>
-      <div className="cart_top">
+    <>
+      <div className="cart_wrapper" style={{transform: isCartOpen ? "translateX(0)" : "", transition: "transform 0.5s ease"}}>
+        <div className="cart_inner">
+        <div className="cart_top">
         <div className="cart_title">Корзина</div>
         <div className="cart_top_right">
           <div className="cart_clear_textBtn" onClick={() => removeAllItemFromCart()}>Очистить</div>
@@ -60,10 +70,8 @@ const Cart = () => {
       <div className="cart_main">
         <div className="cart_body">
           <div className="cart_added_list">
-            {cartItems && cartItems.length ? (
-              cartItems.map((item) => (
-                <CartAddedItem key={item.id} item={item} />
-              ))
+            {loading ? <div className="loadingCart"><ClipLoader color="#8B0506" size={25}/></div> : cartItems && cartItems.length ? (
+              cartItems.map((item) => <CartAddedItem itmeKey={item.item_id} item={item} />)
             ) : (
               <div className="empty_cart">Тут пока пусто</div>
             )}
@@ -101,8 +109,10 @@ const Cart = () => {
           </div>
           <div className="count_of_devices">
             <div className="more_devices_desc">
-              <img src={Deivces} alt="Приборы" />
-              <div className="more_ttl">Приборы</div>
+              <div className="more_devices_left">
+                <img src={Deivces} alt="Приборы" />
+                <div className="more_ttl">Приборы</div>
+              </div>
               <div className="devices_count">
                 <div className="item_count_minus" onClick={() => dispatch(deviceQuantity({quantity: deviceCount - 1}))}>
                   <svg width="14" height="3" viewBox="0 0 14 3" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -234,7 +244,10 @@ const Cart = () => {
           Оплатить и заказать
         </button>
       </div>
-    </div>
+        </div>
+      </div>
+      {isCartOpen && <div className="cart_bg_black" onTouchEnd={() => dispatch(closeCart())}></div>}
+    </>
   );
 };
 

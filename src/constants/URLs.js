@@ -4,4 +4,6 @@ export const auth = `/auth`;
 export const verifyOtp = `/verify-otp`;
 export const validateSession = `/auth/validatesession`;
 export const cart = `/cart`;
+export const cartGuest = `/cart-guest`;
+export const cartMerge = `/cart/merge`;
 export const user = `/users`;

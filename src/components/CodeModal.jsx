@@ -3,9 +3,8 @@ import '../styles/CodeModal.css';
 import SuccessfullyLoggedIn from '/Icons/successfullyLoggedIn.svg'
 
 import axios from "../axios";
-import { verifyOtp } from '../constants/URLs';
+import { verifyOtp, cartMerge } from '../constants/URLs';
 import { validateSessionFunc, getUserFunc } from "../features/authSlice";
-
 import { useDispatch, useSelector } from 'react-redux';
 
 
@@ -61,6 +60,15 @@ const CodeModal = () => {
             }
         }
     };
+
+    const mergingCarts = async () => {
+        try {
+            const response = await axios.post(cartMerge);
+            console.log("Successfully merged cart: ", response);
+        } catch (error) {
+            console.log("Error while merging carts: ", error);
+        }
+    }
     
     
     const handleClick = () => {
@@ -72,6 +80,7 @@ const CodeModal = () => {
             dispatch(validateSessionFunc())
             .unwrap().then(() => {
                 dispatch(getUserFunc());
+                mergingCarts();
             })
         }
       }, [success])

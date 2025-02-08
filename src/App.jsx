@@ -13,8 +13,9 @@ import "./App.css";
 
 import { useSelector, useDispatch } from "react-redux";
 import { validateSessionFunc, getUserFunc } from "./features/authSlice";
-import { getUserCart } from './features/cartSlice';
+import { getUserCart, getGuestCart } from './features/cartSlice';
 import FoodInfoModal from "./components/FoodInfoModal";
+import CartMobileButton from "./components/CartMobileButton";
 
 function App() {
   const isCartOpen = useSelector((state) => state.cart.isCartOpen)
@@ -28,13 +29,13 @@ function App() {
       .unwrap().then(() => {
         dispatch(getUserFunc());
         dispatch(getUserCart());
-      })
+      }).catch(() => dispatch(getGuestCart()))
   }, [dispatch])
 
   return (
     <div className="wrapper">
       <Cart/>
-      <div className="common_wrapper" style={{maxWidth: isCartOpen ? "1265px" : ""}}>
+      <div className="common_wrapper" style={{maxWidth: isCartOpen ? "1228px" : ""}}>
         <Header/>
         <div className="common">
           <Banner />
@@ -62,6 +63,7 @@ function App() {
         </div>
         <Footer/>
       </div>
+      <CartMobileButton/>
       {isSingInOpen && <SignIn/>}
       {isFoodInfoOpen && <FoodInfoModal/>}
     </div>

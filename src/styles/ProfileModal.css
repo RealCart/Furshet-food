@@ -11,15 +11,28 @@
 
 .profile_modal_wrapper {
     position: absolute;
-    border-radius: 20px;
     top: 85px;
     right: 322px;
+}
+
+.profile_modal_inner {
     background-color: #fff;
     padding: 36px 30px 40px 30px;
     width: 100vw;
     height: 100vh;
     max-width: 400px;
     max-height: 266px;
+    border-radius: 20px;
+}
+
+.profile_modal_userProfile {
+    background-color: #fff;
+    padding: 36px 30px 40px 30px;
+    width: 100vw;
+    height: 100vh;
+    max-width: 320px;
+    max-height: 500px;
+    border-radius: 20px;
 }
 
 .ttl_profile_modal {
@@ -38,9 +51,48 @@
     cursor: pointer;
 }
 
-.profile_modal_wrapper span {
-    margin: 25px 0px;
+.profile_modal_line {
+    margin-top: 15px;
     height: 1px;
     display: flex;
     background-color: #8B0506;
+}
+
+.sections_profile_modal {
+    display: flex;
+    margin-top: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sections_profile_modal span {
+    font-size: 24px;
+    font-weight: 600;
+    color: #272727;
+}
+
+.profile_serction {
+    cursor: pointer;
+}
+
+.profile_modal_userProfile_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile_modal_userProfile_header img {
+    cursor: pointer;
+}
+
+.profile_modal_userProfile_header span {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.profile_modal_userProfile_body {
+    margin-top: 44px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }

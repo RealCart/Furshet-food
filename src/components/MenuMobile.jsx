@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import '../styles/MenuMobile.css'
-import { toggleCart } from '../features/cartSlice';
+import { openSingInModal } from '../features/singInSlice';
 
 import homeIcon from '/Icons/home.svg';
 import profileIcon from '/Icons/profile.svg';
@@ -12,18 +12,25 @@ import phoneIcon from '/Icons/phone.svg';
 import instagramIcon from '/Icons/instagram.svg';
 import whatsappIcon from '/Icons/whatsapp.svg';
 import telephoneIcon from '/Icons/telephone.svg';
+import FSign from '/Icons/FSign.svg';
+import cashbackIcon from '/Icons/cashback_profileModal.svg';
 
 function MenuMobile() {
     const dispatch = useDispatch();
+    const {isAuthenticated, userInfo} = useSelector((state) => state.auth);
     const [showMenu, setShowMenu] = useState(false);
 
     const toggleMenu = () => {
         setShowMenu((curr) => !curr);
     }
 
-    const openCart = () => {
-        setShowMenu((curr) => !curr);
-        dispatch(toggleCart());
+    const profileModal = () => {
+        if (isAuthenticated) {
+            console.log('профиль на мобилке')
+        } else {
+            toggleMenu()
+            dispatch(openSingInModal())
+        }
     }
 
     return (
@@ -45,8 +52,8 @@ function MenuMobile() {
                             <div className="menu_user_name">Вы</div>
                                 <div className="menu_nav">
                                     <div className='menu_nav_item'><img src={homeIcon} alt="Главная" /><span>Главная</span></div>
-                                    <div className='menu_nav_item'><img src={profileIcon} alt="Мой профиль" /><span>Мой профиль</span></div>
-                                    <div className='menu_nav_item' onTouchStart={() => openCart()}><img src={orderIcon} alt="Мои заказы" /><span>Мои заказы</span></div>
+                                    <div className='menu_nav_item' onTouchEnd={() => profileModal()}><img src={profileIcon} alt="Мой профиль" />{isAuthenticated ? <span>Мой профиль</span> : <span>Войти</span>}</div>
+                                    <div className='menu_nav_item'><img src={orderIcon} alt="Мои заказы" /><span>Мои заказы</span></div>
                                     <div className='menu_nav_item'><img src={phoneIcon} alt="Сотрудничество" /><span>Сотрудничество</span></div>
                                 </div>
                             <div className="menu_cashback">
@@ -54,6 +61,24 @@ function MenuMobile() {
                             </div>
                         </div>
                     </div>
+                    {isAuthenticated && (
+                        <div className="menu_middle">
+                            <div className="section_menu_middle">
+                                <span>Кэшбэк</span>
+                                <img src={cashbackIcon} alt="Кэшбэк" />
+                            </div>
+                            <div className="menu_middle_line"></div>
+                            <div className="section_menu_middle">
+                                <span>Бонусы</span>
+                                <div className="header__balance">
+                                    <img src={FSign} alt="Бонусы" />
+                                    <div className="balance__count">
+                                        {userInfo.userBonus_points} ₸
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                     <div className="menu_bottom">
                         <div className="adress">ПР. Рақымжан Қошқарбаев, 54А</div>
                         <div className="schedule">Ежедневно: 08:00 - 21:00</div>

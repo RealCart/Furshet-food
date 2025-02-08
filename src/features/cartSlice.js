@@ -1,5 +1,5 @@
 import { createSlice, createSelector, createAsyncThunk } from '@reduxjs/toolkit';
-import { cart } from '../constants/URLs';
+import { cart, cartGuest } from '../constants/URLs';
 
 import axios from '../axios';
 
@@ -16,10 +16,21 @@ export const getUserCart = createAsyncThunk(
   }
 )
 
-const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+export const getGuestCart = createAsyncThunk(
+  'getGuestCart',
+  async(_, {rejectWithValue}) => {
+    try {
+      const response = await axios.get(cartGuest);
+      console.log('guest cart: ', response);
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+)
 
 const initialState = {
-  items: cartItems,
+  items: [],
   devices: 1,
   isCartOpen: false, 
   isCartLoading: false,
@@ -38,34 +49,16 @@ const cartSlice = createSlice({
     toggleCart: (state) => {
       state.isCartOpen = !state.isCartOpen;
     },
-    addToCart: (state, action) => {
-      const {item_id, quantity, price} = action.payload;
-      const indexProductId = state.items.findIndex(item => item.item_id === item_id);
-      if (indexProductId >= 0) {
-        state.items[indexProductId].quantity += quantity;
-      } else {
-        state.items.push({item_id, quantity, price});
-      }
-      localStorage.setItem('cart', JSON.stringify(state.items));
-    },
     removeAllFromCart: (state) => {
       state.items = [];
     },
-    cartItemQuantity: (state, action) => {
-      const {item_id, quantity} = action.payload;
-      const indexProductId = state.items.findIndex(item => item.item_id === item_id);
-      if (indexProductId >= 0) {
-        if (quantity > 0) {
-          state.items[indexProductId].quantity = quantity;
-        } else {
-          state.items = state.items.filter(item => item.item_id !== item_id);
-        }
-      }
-      localStorage.setItem('cart', JSON.stringify(state.items));
-    },
     deviceQuantity: (state, action) => {
       const {quantity} = action.payload;
-      state.devices = quantity;
+      if (quantity >= 0) {
+        state.devices = quantity;
+      } else {
+        return
+      }
     },
   },
   extraReducers: (builder) => 
@@ -81,12 +74,29 @@ const cartSlice = createSlice({
         .addCase(getUserCart.rejected, (state, action) => {
           state.isCartLoading = false;
           state.error = action.payload;
-        }),
+        })
+        .addCase(getGuestCart.pending, (state) => {
+          state.isCartLoading = true;
+        })
+        .addCase(getGuestCart.fulfilled, (state, action) => {
+          state.items = action.payload;
+          console.log("Cart items: ", state.items);
+          state.isCartLoading = false;
+        })
+        .addCase(getGuestCart.rejected, (state, action) => {
+          state.error = action.payload;
+          state.isCartLoading = false;
+        })
 });
 
 export const selectTotalAmount = createSelector(
   selectCartItems,
   (items) => items.reduce((acc, item) => acc + item.quantity * item.price, 0)
+);
+
+export const selectTotalQuantity = createSelector(
+  selectCartItems,
+  (items) => items.reduce((acc, item) => acc + item.quantity, 0)
 );
 
 export const { closeCart, toggleCart, addToCart, removeAllFromCart, deviceQuantity, cartItemQuantity } = cartSlice.actions;
