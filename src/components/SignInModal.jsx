@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useMask } from '@react-input/mask';
 import '../styles/SignIn.css';
 

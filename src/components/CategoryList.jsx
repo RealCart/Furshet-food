@@ -7,10 +7,13 @@ import { cart, cartGuest } from "../constants/URLs";
 
 import { getUserCart, getGuestCart } from '../features/cartSlice';
 import { openFood } from "../features/foodInfo";
+
 import LoadingModal from "./LoadingModal";
+import ProductSkeletonCategory from "./ProductSkeletonCategory";
 
 const CategoryList = (props) => {
     const [loading, setLoading] = useState(false);
+    const [fetchingData, setFetchingData] = useState(true);
 
     const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
     const dispatch = useDispatch();
@@ -20,11 +23,13 @@ const CategoryList = (props) => {
         axios.get(props.url).then((response) => {
             console.log('CategoryList: ', response.data)
             setMenuCategoryItem(response.data)
+            setFetchingData(false);
         }).catch((error) => console.log("ERROR catched category list: ", error));
     }, []);
 
     const handleAddToCart = async (dataId, item_type) => {
         setLoading(true);
+        
         const addItem = {
             item_type: item_type,
             item_id: dataId,
@@ -59,6 +64,7 @@ const CategoryList = (props) => {
     return (
         <>
             {loading && <LoadingModal/>}
+            {fetchingData && <ProductSkeletonCategory categoryCount={4} itemsCount={5}/>}
             {menuCategoryItem.map((item) => (
                 <div className="category_wrapper" key={item.id}>
                     <h2>{item.name}</h2>

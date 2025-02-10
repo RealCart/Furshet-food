@@ -11,16 +11,24 @@ import SignIn from './components/SignInModal';
 import { menuItem } from "./constants/URLs";
 import "./App.css";
 
+import 'react-loading-skeleton/dist/skeleton.css'
+
 import { useSelector, useDispatch } from "react-redux";
 import { validateSessionFunc, getUserFunc } from "./features/authSlice";
 import { getUserCart, getGuestCart } from './features/cartSlice';
 import FoodInfoModal from "./components/FoodInfoModal";
 import CartMobileButton from "./components/CartMobileButton";
+import Skeleton from "react-loading-skeleton";
+import CategoriesSkeleton from "./components/CategoriesSkeleton";
 
 function App() {
   const isCartOpen = useSelector((state) => state.cart.isCartOpen)
   const isSingInOpen = useSelector((state) => state.singIn.isSingInOpen)
   const {isFoodInfoOpen} = useSelector((state) => state.foodInfo);
+  const { isLoading } = useSelector((state) => state.auth); 
+  const { isOpen } = useSelector((state) => state.profile);
+  
+  isSingInOpen || isOpen ? document.body.style.overflowY = 'hidden' : document.body.style.overflowY = 'auto';
 
   const dispatch = useDispatch();
 
@@ -41,10 +49,10 @@ function App() {
           <Banner />
           <About />
           <div className="category_wrapper">
-            <h2>Категории</h2>
+            {isLoading ? <h2><Skeleton width={250}/></h2> : <h2>Категории</h2>}
             <div className="category_line_wrapper">
               <div className="category_line">
-                <Categories/>
+                {isLoading ? <CategoriesSkeleton/> : <Categories/>}
               </div>
             </div>
             <div className="catalog">

@@ -11,6 +11,11 @@
     user-select: none;
 }
 
+.skeleton_menu_header {
+    cursor: pointer;
+    border-radius:10px;
+}
+.skeleton_menu_header:hover,
 .menuHeader:hover {
     transform: scale(1.05);
   }

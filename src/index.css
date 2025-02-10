@@ -18,6 +18,7 @@
   width: 5px;
 }
 
+
 :root::-webkit-scrollbar-thumb {
   background-color: #8B0506;
 }
@@ -37,7 +38,7 @@ h1 {
 }
 
 body {
-  max-width: 1350px;
+  max-width: 1400px;
   width: 90%;
   margin: 0 auto;
   margin-top: 24px;
@@ -52,6 +53,18 @@ button {
   font-family: inherit;
   cursor: pointer;
   transition: border-color 0.25s;
+}
+
+@media (max-width: 1440px) {
+  body {
+    max-width: 1200px;
+  }
+}
+
+@media (max-width: 1024px) {
+  body {
+    max-width: 840px;
+  }
 }
 
 @media (prefers-color-scheme: light) {

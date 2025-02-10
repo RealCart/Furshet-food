@@ -3,6 +3,10 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleProfile, setProfileWindow } from '../features/profileSlice';
 
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { useMask } from '@react-input/mask';
+import * as Yup from 'yup';
+
 import FSign from '/Icons/FSign.svg';
 import cashbackIcon from '/Icons/cashback_profileModal.svg';
 import profileSectionArrow from '/Icons/profile_section_arrow.svg';
@@ -13,8 +17,31 @@ import '../styles/ProfileModal.css';
 const ProfileModal = () => {
     const dispatch = useDispatch();
 
+    const {userphone, userName, userBirthday, userEmail, userInstagram} = useSelector((state) => state.auth.userInfo);
+
     const {userInfo} = useSelector((state) => state.auth);
     const {currentProfileWindow} = useSelector((state) => state.profile);
+
+    const phoneInputRef = useMask({
+        mask: '+7 (___) ___-__-__',
+        replacement: { _: /\d/ },
+    });
+
+    const dateOfBirth = useMask({
+        mask: '__.__.____ г.',
+        replacement: { _: /\d/ },
+    })
+
+    const validationSchema = Yup.object().shape({
+        userPhone: Yup
+            .string()
+            .matches(/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/, 'Введите корректный номер телефона')
+            .required('Номер телефона обязателен!'),
+        userEmail: Yup
+            .string()
+            .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Введите коректный email!')
+
+    })
     
     return (
         <div className="profile_modal">
@@ -91,9 +118,109 @@ const ProfileModal = () => {
                             </div>
                         </div>
                         <div className="profile_modal_userProfile_body">
+                            <Formik
+                            initialValues={{ userPhone: userphone, userName: userName, userDateOfBirth: userBirthday, userEmail: userEmail, userInstagram: userInstagram}}
+                                validationSchema={validationSchema}
+                                onSubmit={(values) => {
 
+                                }}
+                            >
+                                {({ handleSubmit, setFieldValue}) => (
+                                    <Form>
+                                        <div className="input_form_field">
+                                            <div className="input_hintText">Номер телефона</div>
+                                            <Field
+                                                name="userPhone"
+                                                type="tel"
+                                                innerRef={phoneInputRef}
+                                                
+                                                maxLength="20"
+                                                className="profile_input"
+                                            />
+                                        </div>
+                                        <div className="input_form_field">
+                                            <div className="input_hintText">Ваше имя</div>
+                                            <Field
+                                                name="userName"
+                                                type="tel"
+                                                maxLength="20"
+                                                className="profile_input"
+                                            />
+                                        </div><div className="input_form_field">
+                                            <div className="input_hintText">Дата рождения</div>
+                                            <Field
+                                                name="userDateOfBirth"
+                                                type="tel"
+                                                innerRef={dateOfBirth}
+                                                maxLength="10"
+                                                placeholder="дд/мм/гггг"
+                                                className="profile_input"
+                                            />
+                                        </div><div className="input_form_field">
+                                            <div className="input_hintText">Электронная почта</div>
+                                            <Field
+                                                name="userEmail"
+                                                type="tel"
+                                                maxLength="20"
+                                                className="profile_input"
+                                            />
+                                        </div><div className="input_form_field">
+                                            <div className="input_hintText">Инстаграм</div>
+                                            <Field
+                                                name="userInstagram"
+                                                type="tel"
+                                                maxLength="20"
+                                                className="profile_input"
+                                            />
+                                        </div>
+                                        <button
+                                            type='submit'
+                                            className='profile_save_form_submit'
+                                            onClick={handleSubmit}
+                                        >
+                                            Сохранить
+                                        </button>
+                                        <button
+                                            type='submit'
+                                            className='profile_delete_form_submit'
+                                            onClick={() => {}}
+                                        >
+                                            Удалить аккаунт
+                                        </button>
+                                    </Form>
+                                )}
+                            </Formik>
                         </div>
                     </div>
+                )}
+                {currentProfileWindow === 2 && (
+                <div className="profile_modal_userProfile">
+                    <div className="profile_modal_userProfile_header">
+                        <img src={backBtn} alt="Кнопка назад"  onClick={() => dispatch(setProfileWindow({indexOfPage: 0}))}/>
+                        <span>Мои заказы</span>
+                        <div className="close_profile_modal" onClick={() => dispatch(toggleProfile())}>
+                            <svg
+                                width="37"
+                                height="36"
+                                viewBox="0 0 37 36"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <circle cx="18.2002" cy="18" r="18" fill="#FAFAFA" />
+                                <path
+                                d="M12.8003 12.6L23.6003 23.4M12.8003 23.4L23.6003 12.6"
+                                stroke="#272727"
+                                strokeWidth="0.9"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                />
+                            </svg>
+                        </div>
+                    </div>
+                    <div className="profile_modal_userProfile_body">
+                        
+                    </div>
+                </div>
                 )}
             </div>
         </div>

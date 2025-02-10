@@ -112,7 +112,6 @@ const authSlice = createSlice({
                 state.error = null;
             })
             .addCase(validateSessionFunc.fulfilled, (state) => {
-                state.isAuthenticated = true;
                 state.error = null;
             })
             .addCase(validateSessionFunc.rejected, (state, action) => {
@@ -123,13 +122,15 @@ const authSlice = createSlice({
             })
             .addCase(getUserFunc.fulfilled, (state, action) => {
                 const {id, name, phone, email, instagram, birthday, bonus_points} = action.payload
-                state.isLoading = false;
                 state.userInfo = {...state.userInfo, userId: id, userName: name, userphone: phone, userEmail: email, userInstagram: instagram, userBirthday: birthday, userBonus_points: bonus_points};
+                state.isAuthenticated = true;
+                state.isLoading = false;
             })
             .addCase(getUserFunc.rejected, (state, action) => {
                 state.userInfo = null;
                 state.error = action.payload
                 state.isAuthenticated = false;
+                state.isLoading = false;
             })
 })
 

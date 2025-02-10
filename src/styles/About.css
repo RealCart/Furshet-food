@@ -77,8 +77,18 @@ h3 {
     transition: left .3s;
 }
 
+.skeleton_wrapper {
+    display: grid;
+    grid-template-columns: 70% 30%;
+    grid-gap: 19px;
+}
+
 @media (max-width:1024px) {
     .buttons_container {
+        display: none;
+    }
+
+    .skeleton_wrapper {
         display: none;
     }
 }
