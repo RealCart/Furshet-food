@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleProfile, setProfileWindow } from '../features/profileSlice';
@@ -6,6 +6,8 @@ import { toggleProfile, setProfileWindow } from '../features/profileSlice';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useMask } from '@react-input/mask';
 import * as Yup from 'yup';
+
+import { getUserHistory } from '../features/orderHistory';
 
 import FSign from '/Icons/FSign.svg';
 import cashbackIcon from '/Icons/cashback_profileModal.svg';
@@ -42,8 +44,10 @@ const ProfileModal = () => {
             .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Введите коректный email!')
 
     })
-    
-    console.log("Hello")
+
+    useEffect(() => {
+        dispatch(getUserHistory())
+    }, [dispatch]);
 
     return (
         <div className="profile_modal">

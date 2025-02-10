@@ -7,3 +7,4 @@ export const cart = `/cart`;
 export const cartGuest = `/cart-guest`;
 export const cartMerge = `/cart/merge`;
 export const user = `/users`;
+export const userOrderHistory = `/order-history`;

@@ -4,11 +4,13 @@ import singInReducer from './singInSlice';
 import authSliceReducer from './authSlice';
 import profileSliceReducer from  './profileSlice';
 import foodInfoReducer from './foodInfo';
+import orderSliceReducer from './profileSlice';
 
 export const store = configureStore({
   reducer: {
     cart: cartReducer,
     foodInfo: foodInfoReducer,
+    orderHistory: orderSliceReducer,
     profile: profileSliceReducer,
     singIn: singInReducer,
     auth: authSliceReducer, 
