@@ -8,7 +8,7 @@ import Logo from '/images/Logo.svg';
 import FSign from '/Icons/FSign.svg';
 import Cart from '/Icons/Cart.svg';
 
-import UserProfile from './userProfile';
+import UserProfile from './UserProfile';
 import MenuMobile from './MenuMobile';
 import HeaderSkeleton from './HeaderSkeleton';
 
