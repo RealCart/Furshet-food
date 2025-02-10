@@ -37,7 +37,7 @@ const CartAddedItem = ({itmeKey, item}) => {
 
     if (isAuthenticated) {
         try {
-            const response = await axios.post(url, {quantity: 1});
+            const response = await axios.post(url);
             dispatch(getUserCart());
             console.log('Plus cart item: ', response);
         } catch (error) {
@@ -45,7 +45,7 @@ const CartAddedItem = ({itmeKey, item}) => {
         }
     } else {
         try {
-            const response = await axios.post(url, {quantity: 1});
+            const response = await axios.post(url);
             dispatch(getGuestCart());
             console.log('Plus cart item: ', response);
         } catch (error) {
@@ -59,7 +59,7 @@ const CartAddedItem = ({itmeKey, item}) => {
 
     if (isAuthenticated) {
         try {
-            const response = await axios.delete(url, {quantity: 1});
+            const response = await axios.delete(url);
             dispatch(getUserCart());
             console.log('Minus cart item: ', response);
         } catch (error) {
@@ -67,7 +67,7 @@ const CartAddedItem = ({itmeKey, item}) => {
         }
     } else {
         try {
-            const response = await axios.delete(url, {quantity: 1});
+            const response = await axios.delete(url);
             dispatch(getGuestCart());
             console.log('Minus cart item: ', response);
         } catch (error) {

@@ -23,7 +23,7 @@ const ProfileModal = () => {
     const {currentProfileWindow} = useSelector((state) => state.profile);
 
     const phoneInputRef = useMask({
-        mask: '+7 (___) ___-__-__',
+        mask: '+7__________',
         replacement: { _: /\d/ },
     });
 
@@ -43,6 +43,8 @@ const ProfileModal = () => {
 
     })
     
+    console.log("Hello")
+
     return (
         <div className="profile_modal">
             <div className="profile_modal_wrapper">
@@ -185,7 +187,7 @@ const ProfileModal = () => {
                                             className='profile_delete_form_submit'
                                             onClick={() => {}}
                                         >
-                                            Удалить аккаунт
+                                            Выйти из аккаунт
                                         </button>
                                     </Form>
                                 )}
