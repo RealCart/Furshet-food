@@ -17,7 +17,7 @@ export const getUserHistory = createAsyncThunk(
     }
 )
 
-const initialValue = {
+const initialState = {
     isLoading: false,
     userHistory: [],
     isError: null,
