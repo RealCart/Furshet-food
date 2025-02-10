@@ -35,24 +35,44 @@ const CartAddedItem = ({itmeKey, item}) => {
   const cartItemPlus = async () => {
     const url = `${isAuthenticated ? cart : cartGuest}/${item_id}/${item_type}`
 
-    try {
-        const response = await axios.post(url, {quantity: 1});
-        dispatch(getGuestCart());
-        console.log('Plus cart item: ', response);
-    } catch (error) {
-        console.log('Erro while adding item: ', error);
+    if (isAuthenticated) {
+        try {
+            const response = await axios.post(url, {quantity: 1});
+            dispatch(getUserCart());
+            console.log('Plus cart item: ', response);
+        } catch (error) {
+            console.log('Erro while adding item: ', error);
+        }
+    } else {
+        try {
+            const response = await axios.post(url, {quantity: 1});
+            dispatch(getGuestCart());
+            console.log('Plus cart item: ', response);
+        } catch (error) {
+            console.log('Erro while adding item: ', error);
+        }
     }
   }
 
   const cartItemMinus = async () => {
     const url = `${isAuthenticated ? cart : cartGuest}/${item_id}/${item_type}`
 
-    try {
-        const response = await axios.delete(url, {quantity: 1});
-        dispatch(getGuestCart());
-        console.log('Minus cart item: ', response);
-    } catch (error) {
-        console.log('Erro while removing item: ', error);
+    if (isAuthenticated) {
+        try {
+            const response = await axios.delete(url, {quantity: 1});
+            dispatch(getUserCart());
+            console.log('Minus cart item: ', response);
+        } catch (error) {
+            console.log('Erro while removing item: ', error);
+        }
+    } else {
+        try {
+            const response = await axios.delete(url, {quantity: 1});
+            dispatch(getGuestCart());
+            console.log('Minus cart item: ', response);
+        } catch (error) {
+            console.log('Erro while removing item: ', error);
+        }
     }
   }
 
