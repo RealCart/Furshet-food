@@ -18,5 +18,10 @@
 .skeleton_menu_header:hover,
 .menuHeader:hover {
     transform: scale(1.05);
-  }
+}
 
+@media (max-width:425px) {
+    .menu_title {
+        white-space: nowrap;        
+    }
+}

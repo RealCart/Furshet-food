@@ -8,9 +8,12 @@ import CategoryList from "./components/CategoryList";
 import Footer from './components/Footer';
 import Cart from './components/Cart';
 import SignIn from './components/SignInModal';
+import ContctToUs from "./components/ContctToUs";
+import Adverts from "./components/Adverts";
 import { menuItem } from "./constants/URLs";
 import "./App.css";
 
+import { ToastContainer } from "react-toastify";
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import { useSelector, useDispatch } from "react-redux";
@@ -61,7 +64,7 @@ function App() {
                   url={menuItem} 
                 />
               </div>
-              <div className="category_list">
+              <div className="category_list" id="category_list">
                   <CategoryList
                     url={menuItem}
                   />
@@ -69,11 +72,14 @@ function App() {
             </div>
           </div>
         </div>
+        <Adverts/>
+        <ContctToUs/>
         <Footer/>
       </div>
       <CartMobileButton/>
       {isSingInOpen && <SignIn/>}
       {isFoodInfoOpen && <FoodInfoModal/>}
+      <ToastContainer />
     </div>
   );
 }

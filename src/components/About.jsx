@@ -1,16 +1,20 @@
 import React, { useState } from "react";
 
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setMethod } from "../features/cartSlice";
 
 import "../styles/About.css";
 import Skeleton from "react-loading-skeleton";
 
 const About = () => {
-  const [method, setMethod] = useState("delivery");
+  const dispatch = useDispatch();
+
+  const { deliveryMethod } = useSelector((state) => state.cart);
   const { isLoading } = useSelector((state) => state.auth);
 
   const getButtonClass = (currentMethod) =>
-    `button ${method === currentMethod ? "active" : ""}`;
+    `button ${deliveryMethod === currentMethod ? "active" : ""}`;
 
   return (
     <>
@@ -26,22 +30,22 @@ const About = () => {
             <div className="buttons_group">
               <button
                 className={getButtonClass("delivery")}
-                onClick={() => setMethod("delivery")}
+                onClick={() => dispatch(setMethod("delivery"))}
               >
                 Доставка
               </button>
               <button
                 className={getButtonClass("selfPickUp")}
-                onClick={() => setMethod("selfPickUp")}
+                onClick={() => dispatch(setMethod("selfPickUp"))}
               >
                 Самовывоз
               </button>
-              <div className="switch_marker" style={{left: method === "selfPickUp" ? "50%" : "0"}}></div>
+              <div className="switch_marker" style={{left: deliveryMethod === "selfPickUp" ? "50%" : "0"}}></div>
             </div>
           </div>
           <div className="corporate_order">
             <h2 className="order_title">Корпоративный заказ</h2>
-            <button className="button contact_button">Связаться</button>
+            <a href="tel:+77752456644"><button className="button contact_button">Связаться</button></a>
           </div>
         </div>
       )}

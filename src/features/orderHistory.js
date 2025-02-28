@@ -32,13 +32,12 @@ const orderHistory = createSlice({
                 state.isLoading = true;
             })
             .addCase(getUserHistory.fulfilled, (state, action) => {
-                const { data } = action.payload;
-                state.userHistory = [...state.userHistory, data];
+                state.userHistory = action.payload;;
                 state.isLoading = false;
             })
             .addCase(getUserHistory.rejected, (state, action) => {
-                state.error = action.payload;
-                state.isLoading = false;
+                state.isError = action.payload;
+                state.isLoading = true;
             })
     }
 })

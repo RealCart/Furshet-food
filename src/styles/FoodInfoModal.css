@@ -44,12 +44,20 @@
     border-radius: 20px;
 }
 
+.food_info_img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+  
+
 .food_info__info {
     flex: 1;
 }
 
 .food_info_ttl {
-    margin: 0px;
+    margin: 0;
     font-weight: 700;
     font-size: 24px;
 }
@@ -76,9 +84,64 @@
     display: flex;
     margin-top: 13px;
     justify-content: center;
-    padding: 11px 0px;
+    padding: 11px 0;
     border-radius: 10px;
     color: #fff;
     font-weight: 700;
     font-size: 19px;
+}
+
+.food_info_list {
+    display: flex;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .food_info_wrapper {
+        padding: 20px;
+        width: 90vw;
+        height: auto;
+        max-width: 90vw;
+        max-height: none;
+        border-radius: 20px;
+    }
+
+    .btn_close {
+        top: 15px;
+        right: 15px;
+    }
+
+    .food_info_top {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .food_info_img {
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .food_info__info {
+        text-align: left;
+    }
+
+    .food_info_ttl {
+        font-size: 20px;
+    }
+
+    .food_info_desc {
+        font-size: 14px;
+        margin-top: 16px;
+    }
+
+    .food_info_price {
+        font-size: 18px;
+        margin-top: 20px;
+        justify-content: center;
+    }
+
+    .button_add_to_basket {
+        font-size: 16px;
+        padding: 10px 0;
+    }
 }

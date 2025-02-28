@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import '../styles/MenuMobile.css'
 import { openSingInModal } from '../features/singInSlice';
+import { openUserProfileModal, openOrderHistoryModal } from '../features/profileSlice';
 
 import homeIcon from '/Icons/home.svg';
 import profileIcon from '/Icons/profile.svg';
@@ -15,10 +16,14 @@ import telephoneIcon from '/Icons/telephone.svg';
 import FSign from '/Icons/FSign.svg';
 import cashbackIcon from '/Icons/cashback_profileModal.svg';
 
+import ProfileModal from "../components/ProfileModal";
+
 function MenuMobile() {
     const dispatch = useDispatch();
     const {isAuthenticated, userInfo} = useSelector((state) => state.auth);
     const [showMenu, setShowMenu] = useState(false);
+
+    const { isOpen } = useSelector((state) => state.profile);
 
     const toggleMenu = () => {
         setShowMenu((curr) => !curr);
@@ -26,13 +31,32 @@ function MenuMobile() {
 
     const profileModal = () => {
         if (isAuthenticated) {
-            console.log('профиль на мобилке')
+            toggleMenu()
+            dispatch(openUserProfileModal());
         } else {
             toggleMenu()
             dispatch(openSingInModal())
         }
     }
 
+    const orderHistory = () => {
+        if (isAuthenticated) {
+            toggleMenu();
+            dispatch(openOrderHistoryModal());
+        } else {
+            toggleMenu()
+            dispatch(openSingInModal())
+        }
+    }
+
+    const cooperation = () => {
+        toggleMenu();
+        const element = document.getElementById('adverts_wrapper');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+    
     return (
         <>
             <div className="burger_menu" onClick={() => toggleMenu()}>
@@ -53,8 +77,8 @@ function MenuMobile() {
                                 <div className="menu_nav">
                                     <div className='menu_nav_item'><img src={homeIcon} alt="Главная" /><span>Главная</span></div>
                                     <div className='menu_nav_item' onTouchEnd={() => profileModal()}><img src={profileIcon} alt="Мой профиль" />{isAuthenticated ? <span>Мой профиль</span> : <span>Войти</span>}</div>
-                                    <div className='menu_nav_item'><img src={orderIcon} alt="Мои заказы" /><span>Мои заказы</span></div>
-                                    <div className='menu_nav_item'><img src={phoneIcon} alt="Сотрудничество" /><span>Сотрудничество</span></div>
+                                    <div className='menu_nav_item' onTouchEnd={() => orderHistory()}><img src={orderIcon} alt="Мои заказы" /><span>Мои заказы</span></div>
+                                    <div className='menu_nav_item' onTouchEnd={() => cooperation()}><img src={phoneIcon} alt="Сотрудничество" /><span>Сотрудничество</span></div>
                                 </div>
                             <div className="menu_cashback">
                             
@@ -90,6 +114,9 @@ function MenuMobile() {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="menu_mobile_profile">
+                {isOpen && <ProfileModal/>}
             </div>
         </>
     )

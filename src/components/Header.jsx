@@ -17,6 +17,21 @@ function Header() {
 
   const { isAuthenticated, userInfo, isLoading } = useSelector((state) => state.auth);
 
+
+  const handleScroll = () => {
+    const element = document.getElementById('category_list');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const contactUs = () => {
+    const element = document.getElementById('adverts_wrapper');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
   return (
     <header className="header">
       {isLoading ? ( <HeaderSkeleton/> ) : (
@@ -29,9 +44,9 @@ function Header() {
           </div>
           <nav className="header__nav">
             <ul className="header__nav-list">
-              <li className="header__nav-item"><a href="/" className="header__nav-link">Главная</a></li>
-              <li className="header__nav-item"><a href="/menu" className="header__nav-link">Меню</a></li>
-              <li className="header__nav-item"><a href="/partnership" className="header__nav-link">Сотрудничество</a></li>
+              <li className="header__nav-item">Главная</li>
+              <li className="header__nav-item" onClick={() => handleScroll()}>Меню</li>
+              <li className="header__nav-item" onClick={() => contactUs()}>Сотрудничество</li>
             </ul>
           </nav>
           <div className="header__actions">

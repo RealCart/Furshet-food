@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import '../styles/CategoryList.css';
@@ -7,6 +7,8 @@ import { cart, cartGuest } from "../constants/URLs";
 
 import { getUserCart, getGuestCart } from '../features/cartSlice';
 import { openFood } from "../features/foodInfo";
+
+import { setRandomItems } from "../features/randomExtraItems";
 
 import LoadingModal from "./LoadingModal";
 import ProductSkeletonCategory from "./ProductSkeletonCategory";
@@ -19,23 +21,36 @@ const CategoryList = (props) => {
     const dispatch = useDispatch();
 
     const [menuCategoryItem, setMenuCategoryItem] = useState([]);
+    
     useEffect(() => {
-        axios.get(props.url).then((response) => {
-            console.log('CategoryList: ', response.data)
-            setMenuCategoryItem(response.data)
-            setFetchingData(false);
-        }).catch((error) => console.log("ERROR catched category list: ", error));
-    }, []);
+        axios.get(props.url)
+            .then((response) => {
+                console.log('CategoryList: ', response.data);
+                setMenuCategoryItem(response.data);
+                setFetchingData(false);
+                const allItems = response.data.reduce((acc, category) => {
+                    return [...acc, ...category.items];
+                }, []);
+
+                if (allItems.length) {
+                    const randomItems = allItems
+                        .sort(() => Math.random() - 0.5)
+                        .slice(0, 3);
+                    dispatch(setRandomItems(randomItems));
+                }
+            })
+            .catch((error) => console.log("ERROR caught category list: ", error));
+    }, [props.url, dispatch]);
 
     const handleAddToCart = async (dataId, item_type) => {
         setLoading(true);
-        
+
         const addItem = {
             item_type: item_type,
             item_id: dataId,
             quantity: 1,
-        }
-        
+        };
+
         if (isAuthenticated) {
             try {
                 const response = await axios.post(cart, addItem);
@@ -50,7 +65,7 @@ const CategoryList = (props) => {
         } else {
             try {
                 const response = await axios.post(cartGuest, addItem);
-                console.log("Success while posting geust cart: ", response)
+                console.log("Success while posting guest cart: ", response);
                 dispatch(getGuestCart());
             } catch (error) {
                 console.error("Error adding item to guest cart: ", error);
@@ -63,15 +78,19 @@ const CategoryList = (props) => {
 
     return (
         <>
-            {loading && <LoadingModal/>}
-            {fetchingData && <ProductSkeletonCategory categoryCount={4} itemsCount={5}/>}
+            {loading && <LoadingModal />}
+            {fetchingData && <ProductSkeletonCategory categoryCount={4} itemsCount={5} />}
             {menuCategoryItem.map((item) => (
                 <div className="category_wrapper" key={item.id}>
                     <h2>{item.name}</h2>
                     <section className="product_category_block">
-                        {item.food_items.map((item) => (
+                        {item.items.map((item) => (
                             <div className="product_item" key={item.id}>
-                                <img src={item.image_path} alt={item.name} onClick={() => dispatch(openFood({foodId: item.id}))}/>
+                                <img 
+                                    src={item.image_path} 
+                                    alt={item.name} 
+                                    onClick={() => dispatch(openFood({ foodId: item.id }))}
+                                />
                                 <div className="product__item_desc_wrapper">
                                     <div className="product_item_info">
                                         <div className="product_item_title">{item.name}</div>
@@ -92,8 +111,7 @@ const CategoryList = (props) => {
                 </div>
             ))}
         </>
-    )
-}
+    );
+};
 
 export default CategoryList;
-

@@ -169,4 +169,11 @@
     .burger_menu {
         display: flex;
     }
+
+}
+
+@media (min-width: 768px) {
+    .menu_mobile_profile {
+        display: none;
+    }
 }

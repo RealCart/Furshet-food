@@ -17,7 +17,7 @@ const Footer = () => {
                             <div className="work_schedule">
                                 Ежедневно 08:00 - 21:00
                             </div>
-                            <div className="desc">
+                            <div className="work_schedule_desc">
                                 ИП Джапарова ММ<br />
                                 Юр. адрес:<br />
                                 ПРОСПЕКТ  Рақымжан <br />
@@ -39,14 +39,14 @@ const Footer = () => {
                     </div>
                     <div className="footer_right">
                         <a href="#">Бонусная система</a>
-                        <a href="#">Филиалы</a>
-                        <a href="#">Сотрудничество</a>
+                        <a href="#" className="filial">Филиалы</a>
+                        <a href="https://wa.me/77752456644">Сотрудничество</a>
                     </div>
                 </div>
             </div>
             <div className="footer_policy">
                 <div className="policy_title">Политика конфиденциальности</div>
-                <div className="policy_desc">© 2024 All Rights Reserved by <a href="">Nusa Corporation</a></div>
+                <div className="policy_desc">© 2024 All Rights Reserved by <a href="http://www.nusacorp.com/">Nusa Corporation</a></div>
             </div>
         </footer>
     );

@@ -59,7 +59,7 @@ h3 {
     background-color: #8b0000;
     width: 100%;
 }
-  
+
 .order_title {
     font-weight: 600;
     font-size: 18px;
@@ -83,12 +83,36 @@ h3 {
     grid-gap: 19px;
 }
 
-@media (max-width:1024px) {
+@media (max-width: 768px) {
     .buttons_container {
-        display: none;
+        flex-direction: row; 
+        gap: 10px;
+        width: 100%;
+        padding: 0 10px;
     }
 
-    .skeleton_wrapper {
-        display: none;
+    .delivery_method,
+    .corporate_order {
+        flex: 1 1 0;
+        min-width: 0;
+        padding: 10px;
+    }
+    
+    .order_title {
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .button {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+    
+    .contact_button {
+        padding: 6px 10px;
+    }
+    
+    .corporate_order {
+        max-width: none;
     }
 }

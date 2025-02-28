@@ -1,19 +1,18 @@
 .cart_mobile {
     display: none;
     position: sticky;
-    bottom: 0px;
+    bottom: 15px;
     margin-top: 15px;
     background-color: #8B0506;
-    padding: 15px 0px;
+    padding: 15px 20px;
     border-radius: 10px;
     align-items: center;
     justify-content: space-between;
-    width: 100%; 
+    width: auto; 
     text-align: center;
 }
 
 .left_side_cart_mobile {
-    padding-left: 20px;
     position: relative;
 }
 
@@ -21,9 +20,6 @@
     color: #fff;
     font-size: 13px;
     font-weight: 500;
-    flex-grow: 1;
-    text-align: center;
-    margin-right: 20px;
 }
 
 .totla_item {

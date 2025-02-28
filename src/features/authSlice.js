@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { validateSession, user, auth, verifyOtp } from "../constants/URLs";
+
+import { toggleProfile } from "./profileSlice";
+
+import { validateSession, user, auth, verifyOtp, updateProfile, userLogout } from "../constants/URLs";
 import axios from '../axios';
 
 export const sendPhoneNumber = createAsyncThunk(
@@ -54,6 +57,42 @@ export const getUserFunc = createAsyncThunk(
     }
 );
 
+export const putNewUserInfo = createAsyncThunk(
+    'putNewUserInfo',
+    async(userData, {rejectWithValues}) => {
+        const newUserData = {
+            name: userData.userName,
+            phone: userData.userPhone,
+            email: userData.userEmail,
+            instagram: userData.userInstagram,
+            birthday: userData.userDateOfBirth
+        }
+        try {
+            const response = await axios.post(updateProfile, newUserData);
+            console.log('Successfully changed data: ', response);
+            return response.data;
+        } catch (error) {
+            console.log('Error while posting new user data: ', error);
+            rejectWithValues(error);
+        }
+    }
+)
+
+export const logout = createAsyncThunk(
+    "logout",
+    async (_, { dispatch }) => {
+      try {
+        const response = await axios.post(userLogout);
+        dispatch(toggleProfile());
+        dispatch(validateSessionFunc());
+        console.log("Successfully logout: ", response);
+      } catch (error) {
+        console.log("Error while logging out: ", error);
+      }
+    }
+  );
+  
+
 const initialState = {
     phoneModal: true,
     verifyCodeModal: false,
@@ -66,6 +105,7 @@ const initialState = {
         userBirthday: null,
         userBonus_points: null,
     },
+    sendingPhone:false,
     isLoading: false,
     isAuthenticated: false,
     error: null,
@@ -86,17 +126,17 @@ const authSlice = createSlice({
     extraReducers: (builder) => 
         builder
             .addCase(sendPhoneNumber.pending, (state) => {
-                state.isLoading = true;
+                state.sendingPhone = true;
                 state.error = null;
             })
             .addCase(sendPhoneNumber.fulfilled, (state, action) => {
-                state.isLoading = false;
+                state.sendingPhone = false;
                 state.phoneModal = false;
                 state.verifyCodeModal = true;
                 state.userInfo = {...state.userInfo, userphone: action.payload}
             })
             .addCase(sendPhoneNumber.rejected, (state, action) => {
-                state.isLoading = false;
+                state.sendingPhone = false;
                 state.error = action.payload;
             })
             .addCase(verifyCode.fulfilled, (state) => {
@@ -130,6 +170,22 @@ const authSlice = createSlice({
                 state.userInfo = null;
                 state.error = action.payload
                 state.isAuthenticated = false;
+                state.isLoading = false;
+            })
+            .addCase(putNewUserInfo.fulfilled, (state, action) => {
+                const {id, name, phone, email, instagram, birthday, bonus_points} = action.payload.user;
+                state.userInfo = {...state.userInfo, userId: id, userName: name, userphone: phone, userEmail: email, userInstagram: instagram, userBirthday: birthday, userBonus_points: bonus_points};
+            })
+            .addCase(putNewUserInfo.rejected, (state, action) => {
+                state.error = action.payload
+            })
+            .addCase(logout.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(logout.fulfilled, (state) => {
+
+            })
+            .addCase(logout.rejected, (state) => {
                 state.isLoading = false;
             })
 })

@@ -1,0 +1,53 @@
+.contact_wrapper {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.multi_button_social_media {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+}
+
+.contact_inner {
+    display: flex;
+    gap: 6px;
+    flex-direction: row;
+}
+
+.social_media {
+    position: absolute;
+    z-index: 1;
+}
+
+.close_social_media {
+    position: relative;
+    z-index: 2;
+}
+
+.social_btn,
+.chat_button,
+.close_social_media {
+    cursor: pointer;
+}
+
+.social_btn {
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+}
+
+.social_btn.open {
+    opacity: 1;
+    transform: translateY(-30px);
+}
+
+.social_btn.closed {
+    opacity: 0;
+    transform: translateY(52px);
+}
+
+@media (max-width:425px) {
+    .contact_wrapper {
+        display: none;
+    }
+}

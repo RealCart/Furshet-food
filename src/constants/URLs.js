@@ -1,5 +1,5 @@
-export const menuItem = `/food-categories`;
-export const foodItems = `/food-items`;
+export const menuItem = `/categories`;
+export const foodItems = `/items`;
 export const auth = `/auth`;
 export const verifyOtp = `/verify-otp`;
 export const validateSession = `/auth/validatesession`;
@@ -8,3 +8,6 @@ export const cartGuest = `/cart-guest`;
 export const cartMerge = `/cart/merge`;
 export const user = `/users`;
 export const userOrderHistory = `/order-history`;
+export const updateProfile = `/update-profile`;
+export const orders = `/checkout`;
+export const userLogout = `/logout`;

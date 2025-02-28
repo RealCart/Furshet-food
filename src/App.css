@@ -30,3 +30,12 @@
     gap: 20px;
     flex-wrap: wrap;
 }
+
+@media (max-width:425px) {
+    .set_header_line {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+}

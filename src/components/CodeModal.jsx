@@ -4,8 +4,9 @@ import SuccessfullyLoggedIn from '/Icons/successfullyLoggedIn.svg'
 
 import axios from "../axios";
 import { verifyOtp, cartMerge } from '../constants/URLs';
-import { validateSessionFunc, getUserFunc } from "../features/authSlice";
-import { useDispatch, useSelector } from 'react-redux';
+import { validateSessionFunc, getUserFunc, phoneModal, sendPhoneNumber } from "../features/authSlice";
+import { closeSingInModal } from '../features/singInSlice';
+import { useDispatch, useSelector, } from 'react-redux';
 
 
 const CodeModal = () => {
@@ -15,6 +16,7 @@ const CodeModal = () => {
     const dispatch = useDispatch();
     
     const [success, setSuccess] = useState(false);
+    const [secondsBeforeNewCode, setSecondsBeforeNewCode] = useState(60);
 
     const userPhone = useSelector((state) => state.auth.userInfo.userphone)
     
@@ -39,8 +41,12 @@ const CodeModal = () => {
                 const verifyCode = async () => {
                     try {
                         console.log("SendedCode: ", sendData)
-                        const response = await axios.post(verifyOtp, sendData, { withCredentials: true });
-                        setSuccess(true)
+                        const response = await axios.post(verifyOtp, sendData);
+                        setSuccess(true);
+                        setTimeout(() => {
+                            dispatch(closeSingInModal());
+                            dispatch(phoneModal());
+                        }, "2000");
                         console.log(response)
                     } catch (error) {
                         console.log("Ошибка: ", error);
@@ -83,7 +89,15 @@ const CodeModal = () => {
                 mergingCarts();
             })
         }
-      }, [success])
+
+        if (secondsBeforeNewCode > 0) {
+            const timer = setInterval(() => {
+                setSecondsBeforeNewCode((prev) => prev - 1);
+            }, 1000);
+    
+            return () => clearInterval(timer);
+        } 
+      }, [success, secondsBeforeNewCode])
 
     return (
         <>
@@ -105,7 +119,12 @@ const CodeModal = () => {
                             </div>
                         ))}
                     </div>
-                    <h6>Получить новый  код можно через</h6>
+                    {secondsBeforeNewCode ? (
+                        <h6>Получить новый  код можно через {secondsBeforeNewCode} сек.</h6>
+                    ) : (
+                        <div className='send_again' onClick={() => dispatch(sendPhoneNumber(userPhone)).unwrap().then(() => setSecondsBeforeNewCode(60))}>Отправить еще раз!</div>
+                    )}
+                    
                 </>
             ) : (
                 <>

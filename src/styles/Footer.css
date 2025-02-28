@@ -1,6 +1,5 @@
 .footer_wrapper {
-    border-top:2px solid #8B0506;
-    margin-top: 178px;
+    border-top: 2px solid #8B0506;
 }
 
 .footer_inner {
@@ -37,9 +36,9 @@
 }
 
 .center_desc,
-.desc {
+.work_schedule_desc {
     display: flex;
-    line-height:18px;
+    line-height: 18px;
 }
 
 .center_desc {
@@ -75,8 +74,65 @@
     text-decoration: underline;
 }
 
-@media (max-width:768px) {
+@media (max-width: 425px) {
     .footer_wrapper {
+        margin-top: 42px;
+    }
+
+    .footer_logo {
+        margin-right: 13px;
+    }
+
+    .footer_logo img {
+        scale: 0.5;
+    }
+
+    .footer_wrapper_title {
+        font-size: 12px;
+        margin-bottom: 7px;
+    }
+
+    .work_schedule {
+        font-size: 10px;
+        margin-bottom: 5px;
+    }
+
+    .work_schedule_desc {
+        font-size: 10px;
+    }
+
+    .center_desc {
+        font-size: 10px;
+    }
+
+    .footer_right a {
+        font-size: 12px;
+    }
+
+    .footer_section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    
+    .footer_subsections {
+        text-align: center;
+    }
+    
+    .footer_right {
+        grid-column: 1 / -1;
+        text-align: center;
+        margin-top: 20px; 
+    }
+
+    .filial {
         display: none;
+    }
+
+    .policy_title {
+        font-size: 12px;
+    }
+
+    .policy_desc {
+        font-size: 10px;
     }
 }

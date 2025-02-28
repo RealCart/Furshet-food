@@ -2,6 +2,8 @@ import React, { useEffect } from 'react'
 
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleProfile, setProfileWindow } from '../features/profileSlice';
+import { logout } from '../features/authSlice';
+import { putNewUserInfo } from '../features/authSlice'
 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useMask } from '@react-input/mask';
@@ -15,11 +17,15 @@ import profileSectionArrow from '/Icons/profile_section_arrow.svg';
 import backBtn from '/Icons/banner_btn.svg';
 
 import '../styles/ProfileModal.css';
+import OrderHistoryCardSkeleton from './OrderHistoryCardSkeleton';
+import OrderHistoryCard from './OrderHistoryCard';
 
 const ProfileModal = () => {
     const dispatch = useDispatch();
 
     const {userphone, userName, userBirthday, userEmail, userInstagram} = useSelector((state) => state.auth.userInfo);
+
+    const {isLoading, userHistory, isError} = useSelector((state) => state.orderHistory);
 
     const {userInfo} = useSelector((state) => state.auth);
     const {currentProfileWindow} = useSelector((state) => state.profile);
@@ -37,11 +43,11 @@ const ProfileModal = () => {
     const validationSchema = Yup.object().shape({
         userPhone: Yup
             .string()
-            .matches(/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/, 'Введите корректный номер телефона')
+            .matches(/^\+7\d{10}$/, 'Введите корректный номер телефона')
             .required('Номер телефона обязателен!'),
         userEmail: Yup
             .string()
-            .matches(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/, 'Введите коректный email!')
+            .matches(/^(((\.[^<>()\[\]\\.,;:\s@"]+)*[^<>()\[\]\\.,;:\s@"]+)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$|^$/, 'Введите коректный email!')
 
     })
 
@@ -102,7 +108,7 @@ const ProfileModal = () => {
                 {currentProfileWindow === 1 && (
                     <div className="profile_modal_userProfile">
                         <div className="profile_modal_userProfile_header">
-                            <img src={backBtn} alt="Кнопка назад"  onClick={() => dispatch(setProfileWindow({indexOfPage: 0}))}/>
+                            <img src={backBtn} alt="Кнопка назад"  className='profile_back_btn' onClick={() => dispatch(setProfileWindow({indexOfPage: 0}))}/>
                             <span>Мой профиль</span>
                             <div className="close_profile_modal" onClick={() => dispatch(toggleProfile())}>
                                 <svg
@@ -125,10 +131,11 @@ const ProfileModal = () => {
                         </div>
                         <div className="profile_modal_userProfile_body">
                             <Formik
-                            initialValues={{ userPhone: userphone, userName: userName, userDateOfBirth: userBirthday, userEmail: userEmail, userInstagram: userInstagram}}
+                            initialValues={{ userPhone: userphone || "", userName: userName || "", userDateOfBirth: userBirthday || "", userEmail: userEmail || "", userInstagram: userInstagram || ""}}
                                 validationSchema={validationSchema}
                                 onSubmit={(values) => {
-
+                                    console.log(values);
+                                    dispatch(putNewUserInfo(values));
                                 }}
                             >
                                 {({ handleSubmit, setFieldValue}) => (
@@ -139,9 +146,13 @@ const ProfileModal = () => {
                                                 name="userPhone"
                                                 type="tel"
                                                 innerRef={phoneInputRef}
-                                                
                                                 maxLength="20"
                                                 className="profile_input"
+                                            />
+                                            <ErrorMessage
+                                                name="userPhone"
+                                                component="div"
+                                                className="error_message_profile"
                                             />
                                         </div>
                                         <div className="input_form_field">
@@ -170,6 +181,11 @@ const ProfileModal = () => {
                                                 maxLength="20"
                                                 className="profile_input"
                                             />
+                                            <ErrorMessage
+                                                name="userEmail"
+                                                component="div"
+                                                className="error_message_profile"
+                                            />
                                         </div><div className="input_form_field">
                                             <div className="input_hintText">Инстаграм</div>
                                             <Field
@@ -189,7 +205,7 @@ const ProfileModal = () => {
                                         <button
                                             type='submit'
                                             className='profile_delete_form_submit'
-                                            onClick={() => {}}
+                                            onClick={() => dispatch(logout())}
                                         >
                                             Выйти из аккаунт
                                         </button>
@@ -202,7 +218,7 @@ const ProfileModal = () => {
                 {currentProfileWindow === 2 && (
                 <div className="profile_modal_userProfile">
                     <div className="profile_modal_userProfile_header">
-                        <img src={backBtn} alt="Кнопка назад"  onClick={() => dispatch(setProfileWindow({indexOfPage: 0}))}/>
+                        <img src={backBtn} alt="Кнопка назад" className='profile_back_btn'  onClick={() => dispatch(setProfileWindow({indexOfPage: 0}))}/>
                         <span>Мои заказы</span>
                         <div className="close_profile_modal" onClick={() => dispatch(toggleProfile())}>
                             <svg
@@ -223,8 +239,8 @@ const ProfileModal = () => {
                             </svg>
                         </div>
                     </div>
-                    <div className="profile_modal_userProfile_body">
-                        
+                    <div className="profile_modal_userProfile_body" style={{ overflowY: 'scroll'}}>
+                        {isLoading ? <OrderHistoryCardSkeleton cardCount={6}/> : <OrderHistoryCard userHistory={userHistory}/>}
                     </div>
                 </div>
                 )}

@@ -17,9 +17,7 @@ function SignInModal() {
 
   const dispatch = useDispatch();
   const isOpen = useSelector((state) => state.singIn.isSingInOpen);
-  const isLoading = useSelector((state) => state.auth.isLoading);
-  const statePhoneModal = useSelector((state) => state.auth.phoneModal);
-  const stateCodeModal = useSelector((state) => state.auth.verifyCodeModal);
+  const {sendingPhone, phoneModal, verifyCodeModal} = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object().shape({
     phone: Yup
@@ -39,7 +37,7 @@ function SignInModal() {
   return (
     <div className="signIn_wrapper">
       <div className="signIn_inner" style={{ top: isOpen ? '0' : '' }}>
-        {stateCodeModal && (
+        {verifyCodeModal && (
           <div className="back_to_phoneModal" onClick={() => {dispatch(phoneModal())}}>
             <svg width="36" height="37" viewBox="0 0 33 33" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="16.5951" cy="16.8248" r="15.9547" fill="#FAFAFA"/>
@@ -48,7 +46,7 @@ function SignInModal() {
           </div>
         )} 
         <div className="signIn_modal_container">
-          {statePhoneModal && (
+          {phoneModal && (
             <>
               <h2 className="signIn_title">Войти в профиль</h2>
               <p className="signIn_description">
@@ -110,11 +108,11 @@ function SignInModal() {
                     <button
                       type="submit"
                       className="signIn_send_button"
-                      disabled={isLoading ? true : false}
-                      style={{cursor: isLoading ? "not-allowed" : "pointer"}}
+                      disabled={sendingPhone ? true : false}
+                      style={{cursor: sendingPhone ? "not-allowed" : "pointer"}}
                       onClick={handleSubmit}
                     >
-                      {isLoading ? <SyncLoader color='#DEDEDE'/> : "Отправить SMS-код"}
+                      {sendingPhone ? <SyncLoader color='#DEDEDE'/> : "Отправить SMS-код"}
                     </button>
                   </Form>
                 )}
@@ -122,7 +120,7 @@ function SignInModal() {
             </>
           )}
 
-          {stateCodeModal && (
+          {verifyCodeModal && (
             <CodeModal/>
           )}
         </div>

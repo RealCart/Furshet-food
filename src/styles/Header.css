@@ -20,14 +20,13 @@
     gap: 20px;
 }
 
-.header__nav-link {
-    text-decoration: none;
+.header__nav-item {
     font-weight: bold;
     color: #272727;
     font-size: 19px;
 }
 
-.header__nav-link:hover {
+.header__nav-item:hover {
     color: #b30000;
     cursor: pointer;
 }
