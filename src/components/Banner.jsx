@@ -1,18 +1,17 @@
 import React, { useState, useRef, useEffect } from "react";
+
+import axios from "../axios";
+import { useSelector } from "react-redux";
+import Skeleton from "react-loading-skeleton";
+
 import Slider from '/images/banner_picture.svg';
 import BunnerBtn from '/Icons/banner_btn.svg';
 
-import Skeleton from "react-loading-skeleton";
-
 import "../styles/Banner.css";
-import { useSelector } from "react-redux";
+import { banners } from "../constants/URLs";
 
 const Banner = () => {
-  const slides = [
-      Slider,
-      Slider,
-      Slider,
-  ]
+  const [slides, setSlides] = useState([]);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [slide, setSlide] = useState(true);
@@ -53,6 +52,13 @@ const Banner = () => {
   };
 
   useEffect(() => {
+    axios.get(banners)
+      .then((response) => {
+        console.log("Banners: ", response);
+        setSlides(response.data);
+      })
+      .catch((e) => console.log("Error while fetching banners img", e));
+
     if (slide) {
       setIntervalRef.current = setInterval(nextSlide, 4500);
     } else {
@@ -83,7 +89,7 @@ const Banner = () => {
               >
                 {slides.map((item, index) => (
                   <div className="slide" key={index}> 
-                    <img src={item} alt={`Слайд ${index + 1}`} />
+                    <img src={item.image} alt={item.title} />
                   </div>
                 ))}
               </div>

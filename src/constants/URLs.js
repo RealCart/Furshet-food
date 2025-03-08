@@ -1,4 +1,5 @@
 export const menuItem = `/categories`;
+export const banners = `/banners`;
 export const foodItems = `/items`;
 export const auth = `/auth`;
 export const verifyOtp = `/verify-otp`;
